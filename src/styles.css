@@ -512,14 +512,49 @@ button {
   gap: 1rem;
 }
 
+.montage-grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
 .sample-frame {
   aspect-ratio: 4 / 3;
   border-radius: 16px;
   background: #efe9de;
 }
 
+.montage-frame {
+  border-radius: 16px;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(39, 79, 134, 0.04), transparent 42%),
+    #f4ede1;
+}
+
+.montage-frame img {
+  width: 100%;
+  height: auto;
+}
+
 .sample-card h3 {
   margin-top: 0.95rem;
+}
+
+.sample-header-secondary {
+  margin-top: 2.25rem;
+}
+
+.montage-card {
+  padding: 1rem;
+}
+
+.montage-card p {
+  margin: 0.8rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--muted);
 }
 
 .analysis-grid {
@@ -591,7 +626,8 @@ pre {
   }
 
   .proof-strip,
-  .sample-grid {
+  .sample-grid,
+  .montage-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -617,6 +653,7 @@ pre {
 
   .proof-strip,
   .sample-grid,
+  .montage-grid,
   .loop-steps {
     grid-template-columns: 1fr;
   }

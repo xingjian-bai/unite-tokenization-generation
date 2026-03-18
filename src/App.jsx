@@ -72,6 +72,17 @@ const sampleCards = [
   { title: "Sea anemone", image: "./assets/samples-web/sea-anemone.jpg" },
 ];
 
+const sampleMontages = [
+  { title: "Common iguana", image: "./assets/samples/summary_039_common_iguana.png" },
+  { title: "Goose", image: "./assets/samples/summary_099_goose.png" },
+  { title: "Pelican", image: "./assets/samples/summary_144_pelican.png" },
+  { title: "Bee", image: "./assets/samples/summary_309_bee.png" },
+  { title: "Candle", image: "./assets/samples/summary_470_candle.png" },
+  { title: "Plane", image: "./assets/samples/summary_725_plane.png" },
+  { title: "Ice cream", image: "./assets/samples/summary_930_ice_cream.png" },
+  { title: "Cauliflower", image: "./assets/samples/summary_947_cauliflower.png" },
+];
+
 const analysisCards = [
   {
     title: "Weight sharing gives the best reconstruction / generation tradeoff",
@@ -367,6 +378,22 @@ function App() {
                   <img src={card.image} alt={card.title} loading="lazy" />
                 </div>
                 <h3>{card.title}</h3>
+              </article>
+            ))}
+          </div>
+
+          <div className="sample-header reveal sample-header-secondary">
+            <p className="card-kicker">More classes</p>
+            <h3>Additional class montages from the same jointly trained model</h3>
+          </div>
+
+          <div className="montage-grid">
+            {sampleMontages.map((card) => (
+              <article className="card montage-card reveal" key={card.title}>
+                <div className="montage-frame">
+                  <img src={card.image} alt={card.title} loading="lazy" />
+                </div>
+                <p>{card.title}</p>
               </article>
             ))}
           </div>
