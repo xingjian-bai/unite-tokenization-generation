@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UNITE Motion Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Instrument+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="lab">
+      <header class="lab-header">
+        <p class="eyebrow">UNITE Motion Study</p>
+        <h1>Five candidates for the dual-path story</h1>
+        <p>
+          These are not final production assets yet. They are motion studies for
+          the project page, all built around the same thesis: one shared
+          Generative Encoder supports both reconstruction and generation. The
+          five candidates differ in visual abstraction, emphasis, and how
+          closely they stay to the teaser figure.
+        </p>
+        <div class="lab-links">
+          <a class="pill primary" href="../index.html">Back to Project Page</a>
+          <span class="pill">Agent favorites: A and B</span>
+          <span class="pill">Current format: live SVG loops</span>
+        </div>
+        <div class="meta-strip">
+          <div class="meta-item">
+            <span>Recommended for clarity</span>
+            <strong>A · Split-Lane Editorial</strong>
+          </div>
+          <div class="meta-item">
+            <span>Closest to teaser</span>
+            <strong>B · Reveal-and-Trace</strong>
+          </div>
+          <div class="meta-item">
+            <span>Most conceptual</span>
+            <strong>C · Shared-Latent Spotlight</strong>
+          </div>
+          <div class="meta-item">
+            <span>Most training-specific</span>
+            <strong>E · Detach Guardrail</strong>
+          </div>
+        </div>
+      </header>
+
+      <section class="candidate-grid">
+        <article class="candidate candidate-wide">
+          <div class="candidate-head">
+            <span class="candidate-id">A</span>
+            <div>
+              <h2>Split-Lane Editorial</h2>
+              <p>
+                One canvas, two synchronized lanes: reconstruction on top,
+                generation below, with one shared encoder anchored in the
+                middle.
+              </p>
+              <div class="tag-row">
+                <span class="tag">clear</span>
+                <span class="tag">project-page ready</span>
+                <span class="tag">shared weights first</span>
+              </div>
+            </div>
+          </div>
+          <div class="stage">
+            <svg viewBox="0 0 960 540" role="img" aria-label="Split-lane reconstruction and generation animation">
+              <defs>
+                <linearGradient id="noise-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#5a79ae" />
+                  <stop offset="100%" stop-color="#244975" />
+                </linearGradient>
+              </defs>
+
+              <text x="70" y="48" class="svg-kicker">one canvas · two paths · shared encoder</text>
+
+              <rect x="70" y="78" width="150" height="105" rx="18" class="node" />
+              <image href="../assets/samples-web/house-finch.jpg" x="81" y="89" width="128" height="83" />
+              <text x="70" y="204" class="svg-mini">Observed image x</text>
+
+              <rect x="740" y="78" width="150" height="105" rx="18" class="node" />
+              <image href="../assets/samples-web/house-finch.jpg" x="751" y="89" width="128" height="83" />
+              <text x="740" y="204" class="svg-mini">Reconstruction x̂</text>
+
+              <rect x="70" y="356" width="150" height="105" rx="18" class="node" />
+              <rect x="81" y="367" width="128" height="83" rx="14" fill="url(#noise-gradient)" />
+              <circle cx="116" cy="397" r="5" fill="rgba(255,255,255,0.75)" />
+              <circle cx="145" cy="428" r="4" fill="rgba(255,255,255,0.52)" />
+              <circle cx="171" cy="390" r="6" fill="rgba(255,255,255,0.66)" />
+              <circle cx="195" cy="419" r="4.5" fill="rgba(255,255,255,0.6)" />
+              <text x="70" y="482" class="svg-mini">Noisy latent z<tspan baseline-shift="sub">t</tspan></text>
+
+              <rect x="740" y="356" width="150" height="105" rx="18" class="node" />
+              <image href="../assets/samples-web/golden-retriever.jpg" x="751" y="367" width="128" height="83" />
+              <text x="740" y="482" class="svg-mini">Generated sample</text>
+
+              <rect x="430" y="134" width="100" height="272" rx="24" class="encoder" />
+              <text x="480" y="256" text-anchor="middle" class="encoder-text">shared</text>
+              <text x="480" y="278" text-anchor="middle" class="encoder-text">GEθ</text>
+
+              <path class="lane recon" d="M220 130 H430 M530 130 H740" />
+              <path class="lane gen" d="M220 408 H430 M530 408 H740" />
+
+              <circle class="pulse-recon" r="9">
+                <animateMotion dur="6s" begin="0s" repeatCount="indefinite" path="M220 130 H740" />
+                <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.08;0.14;0.48;0.58" dur="6s" repeatCount="indefinite" />
+              </circle>
+              <circle class="pulse-recon" r="7" opacity="0.5">
+                <animateMotion dur="6s" begin="0.18s" repeatCount="indefinite" path="M220 130 H740" />
+                <animate attributeName="opacity" values="0;0;0.6;0.6;0" keyTimes="0;0.12;0.2;0.5;0.62" dur="6s" repeatCount="indefinite" />
+              </circle>
+
+              <circle class="pulse-gen" r="9">
+                <animateMotion dur="6s" begin="3s" repeatCount="indefinite" path="M220 408 H740" />
+                <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.08;0.14;0.48;0.58" dur="6s" repeatCount="indefinite" />
+              </circle>
+              <circle class="pulse-gen" r="7" opacity="0.5">
+                <animateMotion dur="6s" begin="3.18s" repeatCount="indefinite" path="M220 408 H740" />
+                <animate attributeName="opacity" values="0;0;0.6;0.6;0" keyTimes="0;0.12;0.2;0.5;0.62" dur="6s" repeatCount="indefinite" />
+              </circle>
+
+              <circle cx="480" cy="270" r="82" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1.5">
+                <animate attributeName="r" values="80;88;80" dur="3s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.16;0.28;0.16" dur="3s" repeatCount="indefinite" />
+              </circle>
+
+              <text x="250" y="118" class="svg-mini" fill="#b7632f">reconstruction path</text>
+              <text x="250" y="396" class="svg-mini" fill="#2f5f9e">generation path</text>
+            </svg>
+          </div>
+          <div class="caption">
+            <span><strong>Best for:</strong> hero or first method figure on the webpage.</span>
+            <span><strong>Emphasis:</strong> two paths, one encoder.</span>
+          </div>
+        </article>
+
+        <article class="candidate">
+          <div class="candidate-head">
+            <span class="candidate-id">B</span>
+            <div>
+              <h2>Reveal-and-Trace</h2>
+              <p>
+                Start from the teaser itself, then trace the reconstruction and
+                generation paths in sequence with minimal drafting-table motion.
+              </p>
+              <div class="tag-row">
+                <span class="tag">closest to teaser</span>
+                <span class="tag">scholarly</span>
+                <span class="tag">low-risk</span>
+              </div>
+            </div>
+          </div>
+          <div class="stage">
+            <svg viewBox="0 0 960 540" role="img" aria-label="Teaser overlay trace animation">
+              <image href="../assets/figures/teaser2.png" x="20" y="62" width="920" height="385" opacity="0.35" />
+
+              <rect x="34" y="46" width="892" height="417" rx="28" fill="rgba(255,255,255,0.08)" stroke="rgba(19,36,58,0.12)" stroke-width="1.4" />
+              <circle cx="478" cy="255" r="54" fill="rgba(19,36,58,0.16)">
+                <animate attributeName="r" values="48;62;48" dur="3s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.12;0.22;0.12" dur="3s" repeatCount="indefinite" />
+              </circle>
+
+              <path
+                class="outline-recon"
+                d="M105 162 C235 120 348 110 478 178 C608 246 704 232 862 170"
+                stroke-dasharray="1200"
+                stroke-dashoffset="1200"
+              >
+                <animate attributeName="stroke-dashoffset" values="1200;0;0;1200" keyTimes="0;0.28;0.46;1" dur="6s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.46;0.58" dur="6s" repeatCount="indefinite" />
+              </path>
+
+              <path
+                class="outline-gen"
+                d="M105 338 C235 382 348 392 478 324 C608 256 704 270 862 332"
+                stroke-dasharray="1200"
+                stroke-dashoffset="1200"
+              >
+                <animate attributeName="stroke-dashoffset" values="1200;1200;1200;0;0;1200" keyTimes="0;0.44;0.5;0.74;0.9;1" dur="6s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.46;0.58;0.9;1" dur="6s" repeatCount="indefinite" />
+              </path>
+
+              <circle class="pulse-recon" r="9">
+                <animateMotion dur="6s" begin="0s" repeatCount="indefinite" path="M105 162 C235 120 348 110 478 178 C608 246 704 232 862 170" />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.42;0.5" dur="6s" repeatCount="indefinite" />
+              </circle>
+
+              <circle class="pulse-gen" r="9">
+                <animateMotion dur="6s" begin="3s" repeatCount="indefinite" path="M105 338 C235 382 348 392 478 324 C608 256 704 270 862 332" />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.42;0.5" dur="6s" repeatCount="indefinite" />
+              </circle>
+
+              <g opacity="0">
+                <rect x="86" y="106" width="152" height="32" rx="16" fill="rgba(255,252,246,0.86)" />
+                <text x="162" y="127" text-anchor="middle" class="svg-mini" fill="#b7632f">reconstruction path</text>
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.42;0.5" dur="6s" repeatCount="indefinite" />
+              </g>
+
+              <g opacity="0">
+                <rect x="742" y="372" width="132" height="32" rx="16" fill="rgba(255,252,246,0.86)" />
+                <text x="808" y="393" text-anchor="middle" class="svg-mini" fill="#2f5f9e">generation path</text>
+                <animate attributeName="opacity" values="0;0;0;1;1;0" keyTimes="0;0.5;0.56;0.68;0.9;1" dur="6s" repeatCount="indefinite" />
+              </g>
+
+              <text x="36" y="34" class="svg-kicker">paper-native overlay motion</text>
+            </svg>
+          </div>
+          <div class="caption">
+            <span><strong>Best for:</strong> a teaser-adjacent section opener.</span>
+            <span><strong>Emphasis:</strong> stays visually closest to the paper.</span>
+          </div>
+        </article>
+
+        <article class="candidate">
+          <div class="candidate-head">
+            <span class="candidate-id">C</span>
+            <div>
+              <h2>Shared-Latent Spotlight</h2>
+              <p>
+                Most of the canvas stays quiet; the latent block in the middle
+                becomes the star, alternately claimed by strong and weak
+                observability.
+              </p>
+              <div class="tag-row">
+                <span class="tag">conceptual</span>
+                <span class="tag">observability shift</span>
+                <span class="tag">latent language</span>
+              </div>
+            </div>
+          </div>
+          <div class="stage">
+            <svg viewBox="0 0 960 540" role="img" aria-label="Shared latent spotlight animation">
+              <rect x="82" y="120" width="148" height="104" rx="18" class="node" />
+              <image href="../assets/samples-web/house-finch.jpg" x="94" y="132" width="124" height="80" />
+              <text x="82" y="246" class="svg-mini">strong observability</text>
+
+              <rect x="730" y="316" width="148" height="104" rx="18" class="node" />
+              <image href="../assets/samples-web/sea-anemone.jpg" x="742" y="328" width="124" height="80" />
+              <text x="730" y="442" class="svg-mini">weak observability</text>
+
+              <rect x="375" y="168" width="210" height="188" rx="28" class="window" />
+              <text x="480" y="146" text-anchor="middle" class="svg-kicker">same latent program</text>
+
+              <g opacity="0">
+                <circle class="latent-dot recon" cx="425" cy="218" r="8" />
+                <circle class="latent-dot recon" cx="480" cy="218" r="8" />
+                <circle class="latent-dot recon" cx="535" cy="218" r="8" />
+                <circle class="latent-dot recon" cx="425" cy="266" r="8" />
+                <circle class="latent-dot recon" cx="480" cy="266" r="8" />
+                <circle class="latent-dot recon" cx="535" cy="266" r="8" />
+                <circle class="latent-dot recon" cx="425" cy="314" r="8" />
+                <circle class="latent-dot recon" cx="480" cy="314" r="8" />
+                <circle class="latent-dot recon" cx="535" cy="314" r="8" />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.42;0.54" dur="6s" repeatCount="indefinite" />
+              </g>
+
+              <g opacity="0">
+                <circle class="latent-dot gen" cx="420" cy="228" r="7" />
+                <circle class="latent-dot gen" cx="466" cy="206" r="8" />
+                <circle class="latent-dot gen" cx="522" cy="224" r="7" />
+                <circle class="latent-dot gen" cx="554" cy="274" r="8" />
+                <circle class="latent-dot gen" cx="520" cy="322" r="7" />
+                <circle class="latent-dot gen" cx="462" cy="334" r="9" />
+                <circle class="latent-dot gen" cx="414" cy="300" r="7" />
+                <circle class="latent-dot gen" cx="436" cy="258" r="7" />
+                <circle class="latent-dot gen" cx="486" cy="278" r="8" />
+                <animate attributeName="opacity" values="0;0;0;1;1;0" keyTimes="0;0.46;0.54;0.68;0.9;1" dur="6s" repeatCount="indefinite" />
+              </g>
+
+              <path class="lane recon" d="M230 172 C300 172 336 216 374 242" />
+              <path class="lane recon" d="M586 242 C652 242 688 194 730 172" />
+              <path class="lane gen" d="M230 368 C300 368 336 324 374 292" />
+              <path class="lane gen" d="M586 292 C652 292 688 340 730 368" />
+
+              <circle class="pulse-recon" r="9">
+                <animateMotion dur="6s" begin="0s" repeatCount="indefinite" path="M230 172 C300 172 336 216 374 242" />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.3;0.4" dur="6s" repeatCount="indefinite" />
+              </circle>
+              <circle class="pulse-recon" r="9">
+                <animateMotion dur="6s" begin="1.4s" repeatCount="indefinite" path="M586 242 C652 242 688 194 730 172" />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.3;0.4" dur="6s" repeatCount="indefinite" />
+              </circle>
+
+              <circle class="pulse-gen" r="9">
+                <animateMotion dur="6s" begin="3s" repeatCount="indefinite" path="M230 368 C300 368 336 324 374 292" />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.3;0.4" dur="6s" repeatCount="indefinite" />
+              </circle>
+              <circle class="pulse-gen" r="9">
+                <animateMotion dur="6s" begin="4.4s" repeatCount="indefinite" path="M586 292 C652 292 688 340 730 368" />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.3;0.4" dur="6s" repeatCount="indefinite" />
+              </circle>
+
+              <rect x="350" y="96" width="168" height="30" rx="15" fill="rgba(255,252,246,0.88)" />
+              <text x="434" y="116" text-anchor="middle" class="svg-mini" fill="#b7632f">image-conditioned inference</text>
+              <rect x="442" y="412" width="176" height="30" rx="15" fill="rgba(255,252,246,0.88)" />
+              <text x="530" y="432" text-anchor="middle" class="svg-mini" fill="#2f5f9e">noise-conditioned inference</text>
+            </svg>
+          </div>
+          <div class="caption">
+            <span><strong>Best for:</strong> a conceptual method or theory block.</span>
+            <span><strong>Emphasis:</strong> same latent program, different conditioning strength.</span>
+          </div>
+        </article>
+
+        <article class="candidate">
+          <div class="candidate-head">
+            <span class="candidate-id">D</span>
+            <div>
+              <h2>Dual-Window Procedure</h2>
+              <p>
+                Two framed mini-worlds play side-by-side: image-conditioned
+                tokenization on the left and noise-conditioned denoising on the
+                right, bridged by the same weights.
+              </p>
+              <div class="tag-row">
+                <span class="tag">methods section</span>
+                <span class="tag">comparison-friendly</span>
+                <span class="tag">robust layout</span>
+              </div>
+            </div>
+          </div>
+          <div class="stage">
+            <svg viewBox="0 0 960 540" role="img" aria-label="Dual-window shared-weight animation">
+              <rect x="52" y="76" width="344" height="388" rx="22" class="window" />
+              <rect x="564" y="76" width="344" height="388" rx="22" class="window" />
+              <rect x="432" y="114" width="96" height="312" rx="26" class="encoder" />
+
+              <text x="224" y="106" text-anchor="middle" class="svg-kicker">reconstruction window</text>
+              <text x="736" y="106" text-anchor="middle" class="svg-kicker">generation window</text>
+              <text x="480" y="268" text-anchor="middle" class="encoder-text">same</text>
+              <text x="480" y="290" text-anchor="middle" class="encoder-text">GEθ</text>
+
+              <rect x="82" y="148" width="104" height="76" rx="14" class="node" />
+              <image href="../assets/samples-web/house-finch.jpg" x="90" y="156" width="88" height="60" />
+              <rect x="256" y="148" width="104" height="76" rx="14" class="node" />
+              <text x="308" y="190" text-anchor="middle" class="svg-label">latent z0</text>
+              <rect x="82" y="318" width="104" height="76" rx="14" class="node" />
+              <image href="../assets/samples-web/house-finch.jpg" x="90" y="326" width="88" height="60" />
+
+              <rect x="594" y="148" width="104" height="76" rx="14" class="node" />
+              <rect x="602" y="156" width="88" height="60" rx="10" fill="url(#noise-gradient-d)" />
+              <circle cx="627" cy="179" r="5" fill="rgba(255,255,255,0.72)" />
+              <circle cx="654" cy="204" r="4" fill="rgba(255,255,255,0.52)" />
+              <circle cx="673" cy="172" r="6" fill="rgba(255,255,255,0.66)" />
+              <rect x="768" y="148" width="104" height="76" rx="14" class="node" />
+              <text x="820" y="190" text-anchor="middle" class="svg-label">clean latent</text>
+              <rect x="768" y="318" width="104" height="76" rx="14" class="node" />
+              <image href="../assets/samples-web/golden-retriever.jpg" x="776" y="326" width="88" height="60" />
+
+              <defs>
+                <linearGradient id="noise-gradient-d" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#5a79ae" />
+                  <stop offset="100%" stop-color="#244975" />
+                </linearGradient>
+              </defs>
+
+              <path class="lane recon" d="M186 186 H432" />
+              <path class="lane recon" d="M432 344 H186" />
+              <path class="lane gen" d="M698 186 H528" />
+              <path class="lane gen" d="M768 344 H528" />
+              <path class="lane gen" d="M698 186 H768" />
+
+              <circle class="pulse-recon" r="8">
+                <animateMotion dur="6s" begin="0s" repeatCount="indefinite" path="M186 186 H432" />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.32;0.4" dur="6s" repeatCount="indefinite" />
+              </circle>
+              <circle class="pulse-recon" r="8">
+                <animateMotion dur="6s" begin="1.6s" repeatCount="indefinite" path="M432 344 H186" />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.32;0.4" dur="6s" repeatCount="indefinite" />
+              </circle>
+
+              <circle class="pulse-gen" r="8">
+                <animateMotion dur="6s" begin="3s" repeatCount="indefinite" path="M698 186 H528" />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.32;0.4" dur="6s" repeatCount="indefinite" />
+              </circle>
+              <circle class="pulse-gen" r="8">
+                <animateMotion dur="6s" begin="4.2s" repeatCount="indefinite" path="M768 344 H528" />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.32;0.4" dur="6s" repeatCount="indefinite" />
+              </circle>
+
+              <rect x="444" y="84" width="72" height="16" rx="8" fill="rgba(255,255,255,0.18)">
+                <animate attributeName="opacity" values="0.25;1;0.25" dur="3s" repeatCount="indefinite" />
+              </rect>
+              <text x="480" y="392" text-anchor="middle" class="svg-mini" fill="rgba(255,250,242,0.86)">weight sharing</text>
+            </svg>
+          </div>
+          <div class="caption">
+            <span><strong>Best for:</strong> a methods section where direct comparison matters.</span>
+            <span><strong>Emphasis:</strong> same weights across two windows.</span>
+          </div>
+        </article>
+
+        <article class="candidate">
+          <div class="candidate-head">
+            <span class="candidate-id">E</span>
+            <div>
+              <h2>Detach Guardrail</h2>
+              <p>
+                A more training-specific storyboard: tokenize, detach and noise,
+                denoise with the same encoder, and visibly block the unstable
+                shortcut.
+              </p>
+              <div class="tag-row">
+                <span class="tag">training loop</span>
+                <span class="tag">detach emphasis</span>
+                <span class="tag">most specific</span>
+              </div>
+            </div>
+          </div>
+          <div class="stage">
+            <svg viewBox="0 0 960 540" role="img" aria-label="Detach guardrail animation">
+              <text x="52" y="58" class="svg-kicker">tokenize → detach + noise → denoise</text>
+
+              <rect x="64" y="120" width="180" height="98" rx="18" class="node" />
+              <image href="../assets/samples-web/house-finch.jpg" x="76" y="132" width="156" height="74" />
+              <text x="64" y="242" class="svg-mini">1. image enters shared encoder</text>
+
+              <rect x="320" y="106" width="132" height="128" rx="20" class="encoder" />
+              <text x="386" y="168" text-anchor="middle" class="encoder-text">GEθ</text>
+              <text x="386" y="190" text-anchor="middle" class="encoder-text">tokenize</text>
+
+              <rect x="520" y="120" width="154" height="98" rx="18" class="node" />
+              <text x="597" y="176" text-anchor="middle" class="svg-label">clean latent z0</text>
+
+              <rect x="520" y="304" width="154" height="98" rx="18" class="node" />
+              <rect x="532" y="316" width="130" height="74" rx="14" fill="url(#noise-gradient-e)" />
+              <text x="597" y="360" text-anchor="middle" class="svg-label" fill="#fffaf2">noised latent zt</text>
+
+              <rect x="720" y="288" width="132" height="128" rx="20" class="encoder" />
+              <text x="786" y="350" text-anchor="middle" class="encoder-text">same GEθ</text>
+              <text x="786" y="372" text-anchor="middle" class="encoder-text">denoise</text>
+
+              <rect x="742" y="82" width="140" height="94" rx="18" class="node" />
+              <image href="../assets/samples-web/house-finch.jpg" x="752" y="92" width="120" height="74" />
+              <text x="742" y="198" class="svg-mini">reconstruction</text>
+
+              <rect x="742" y="432" width="140" height="94" rx="18" class="node" transform="translate(0,-74)" />
+              <image href="../assets/samples-web/golden-retriever.jpg" x="752" y="368" width="120" height="74" />
+              <text x="742" y="464" class="svg-mini">generation</text>
+
+              <defs>
+                <linearGradient id="noise-gradient-e" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#5a79ae" />
+                  <stop offset="100%" stop-color="#244975" />
+                </linearGradient>
+              </defs>
+
+              <path class="lane recon" d="M244 168 H320" />
+              <path class="lane recon" d="M452 168 H520" />
+              <path class="lane recon" d="M674 168 C716 168 730 156 742 146" />
+
+              <path class="lane gen" d="M597 218 V304" />
+              <path class="lane gen" d="M674 352 H720" />
+              <path class="lane gen" d="M852 352 H892" />
+
+              <path class="lane detach" d="M596 218 V282" />
+              <path class="lane detach" d="M674 168 C738 168 776 248 786 288" />
+
+              <circle class="pulse-recon" r="8">
+                <animateMotion dur="6s" begin="0s" repeatCount="indefinite" path="M244 168 H520" />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.4;0.48" dur="6s" repeatCount="indefinite" />
+              </circle>
+
+              <circle class="pulse-gen" r="8">
+                <animateMotion dur="6s" begin="2.4s" repeatCount="indefinite" path="M597 218 V352 H720" />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.16;0.42;0.52" dur="6s" repeatCount="indefinite" />
+              </circle>
+
+              <circle class="pulse-gen" r="8">
+                <animateMotion dur="6s" begin="4s" repeatCount="indefinite" path="M852 352 H892" />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.42;0.5" dur="6s" repeatCount="indefinite" />
+              </circle>
+
+              <g opacity="0">
+                <path class="blocked" d="M700 214 L752 264" />
+                <path class="blocked" d="M752 214 L700 264" />
+                <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.24;0.34;0.46;0.54" dur="6s" repeatCount="indefinite" />
+              </g>
+
+              <rect x="548" y="252" width="98" height="30" rx="15" fill="rgba(255,252,246,0.9)" />
+              <text x="597" y="272" text-anchor="middle" class="svg-mini" fill="#b3493f">detach</text>
+            </svg>
+          </div>
+          <div class="caption">
+            <span><strong>Best for:</strong> a training-loop explainer or ablation note.</span>
+            <span><strong>Emphasis:</strong> why detach makes the shared setup work.</span>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>
