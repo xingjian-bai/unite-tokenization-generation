@@ -58,8 +58,8 @@ const generationRows = [
   { method: "UNITE-XL (Ours)", regime: "single-stage", fid: "1.75", is: "309.9", ours: true },
   { method: "DiT-XL/2", regime: "two-stage", fid: "2.27", is: "278.2", section: "Two-stage" },
   { method: "SiT-XL/2", regime: "two-stage", fid: "2.06", is: "277.5" },
-  { method: "REPA-SiT-XL/2", regime: "two-stage + DINOv2", fid: "1.42", is: "305.7", section: "Two-stage + DINOv2" },
-  { method: "DDT-XL/2", regime: "two-stage + DINOv2", fid: "1.26", is: "310.6" },
+  { method: "REPA-SiT-XL/2", regime: "two-stage + DINOv2", fid: "1.42", is: "305.7", section: "Two-stage + DINOv2", dimmed: true },
+  { method: "DDT-XL/2", regime: "two-stage + DINOv2", fid: "1.26", is: "310.6", dimmed: true },
 ];
 
 const reconstructionRows = [
@@ -140,7 +140,7 @@ function GenerationTable() {
                   <span>{row.section}</span>
                 </div>
               )}
-              <div className={`table-row ${row.ours ? "table-row-ours" : ""}`}>
+              <div className={`table-row ${row.ours ? "table-row-ours" : ""} ${row.dimmed ? "table-row-dimmed" : ""}`}>
                 <span className="cell cell-primary" data-label="Method">
                   {row.method}
                 </span>
