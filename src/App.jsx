@@ -257,12 +257,12 @@ function App() {
             <div className="hero-copy">
               <h1>UNITE: End-to-End Training for Unified Tokenization and Latent Denoising</h1>
               <p className="hero-authors">
-                Shivam Duggal*, Xingjian Bai*, Zongze Wu, Richard Zhang, Eli Shechtman,
+                Shivam Duggal*<sup>1</sup>, Xingjian Bai*<sup>1</sup>, Zongze Wu<sup>2</sup>, Richard Zhang<sup>2</sup>, Eli Shechtman<sup>2</sup>,
                 <br />
-                Antonio Torralba, Phillip Isola, William T. Freeman
+                Antonio Torralba<sup>1</sup>, Phillip Isola<sup>1</sup>, William T. Freeman<sup>1</sup>
               </p>
               <p className="hero-meta">
-                Massachusetts Institute of Technology · Adobe
+                <sup>1</sup>Massachusetts Institute of Technology &nbsp; <sup>2</sup>Adobe
               </p>
               <div className="hero-actions">
                 <a className="button primary" href="./assets/docs/unite-paper.pdf">
