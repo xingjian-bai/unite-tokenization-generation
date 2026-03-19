@@ -219,7 +219,6 @@ function App() {
         <section className="hero reveal">
           <div className="hero-shell">
             <div className="hero-copy">
-              <p className="hero-kicker">ICML 2026 · MIT & Adobe</p>
               <h1>UNITE</h1>
               <p className="hero-title">
                 End-to-End Training for Unified Tokenization and Latent Denoising
