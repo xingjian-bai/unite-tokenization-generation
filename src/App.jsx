@@ -49,17 +49,17 @@ const statCards = [
 ];
 
 const generationRows = [
-  { method: "JiT-B/16", regime: "single-stage", fid: "3.66", is: "275.1", section: "Single-stage" },
-  { method: "UNITE-B (Ours)", regime: "single-stage", fid: "2.12", is: "294.1", ours: true },
-  { method: "JiT-L/16", regime: "single-stage", fid: "2.36", is: "298.5" },
-  { method: "UNITE-L (Ours)", regime: "single-stage", fid: "1.73", is: "296.0", ours: true },
-  { method: "PixelFlow-XL/4", regime: "single-stage", fid: "1.98", is: "282.1" },
-  { method: "JiT-H/16", regime: "single-stage", fid: "1.86", is: "303.4" },
-  { method: "UNITE-XL (Ours)", regime: "single-stage", fid: "1.75", is: "309.9", ours: true },
-  { method: "DiT-XL/2", regime: "two-stage", fid: "2.27", is: "278.2", section: "Two-stage", dimmed: true },
-  { method: "SiT-XL/2", regime: "two-stage", fid: "2.06", is: "277.5", dimmed: true },
-  { method: "REPA-SiT-XL/2", regime: "two-stage + DINOv2", fid: "1.42", is: "305.7", section: "Two-stage + DINOv2", dimmed: true },
-  { method: "DDT-XL/2", regime: "two-stage + DINOv2", fid: "1.26", is: "310.6", dimmed: true },
+  { method: "JiT-B/16", regime: "single-stage", params: "131M", fid: "3.66", is: "275.1", section: "Single-stage" },
+  { method: "UNITE-B (Ours)", regime: "single-stage", params: "217M", fid: "2.12", is: "294.1", ours: true },
+  { method: "JiT-L/16", regime: "single-stage", params: "459M", fid: "2.36", is: "298.5" },
+  { method: "UNITE-L (Ours)", regime: "single-stage", params: "589M", fid: "1.73", is: "296.0", ours: true },
+  { method: "PixelFlow-XL/4", regime: "single-stage", params: "677M", fid: "1.98", is: "282.1" },
+  { method: "JiT-H/16", regime: "single-stage", params: "953M", fid: "1.86", is: "303.4" },
+  { method: "UNITE-XL (Ours)", regime: "single-stage", params: "806M", fid: "1.75", is: "309.9", ours: true },
+  { method: "DiT-XL/2", regime: "two-stage", params: "675M+49M", fid: "2.27", is: "278.2", section: "Two-stage", dimmed: true },
+  { method: "SiT-XL/2", regime: "two-stage", params: "675M+49M", fid: "2.06", is: "277.5", dimmed: true },
+  { method: "REPA-SiT-XL/2", regime: "two-stage + DINOv2", params: "675M+49M", fid: "1.42", is: "305.7", section: "Two-stage + DINOv2", dimmed: true },
+  { method: "DDT-XL/2", regime: "two-stage + DINOv2", params: "675M+49M", fid: "1.26", is: "310.6", dimmed: true },
 ];
 
 const reconstructionRows = [
@@ -126,9 +126,10 @@ function GenerationTable() {
         <h3>Strong ImageNet generation</h3>
       </div>
       <div className="table-wrap">
-        <div className="result-table table-four">
+        <div className="result-table table-five">
           <div className="table-head">
             <span>Method</span>
+            <span>Params</span>
             <span>Regime</span>
             <span>FID ↓</span>
             <span>IS ↑</span>
@@ -143,6 +144,9 @@ function GenerationTable() {
               <div className={`table-row ${row.ours ? "table-row-ours" : ""} ${row.dimmed ? "table-row-dimmed" : ""}`}>
                 <span className="cell cell-primary" data-label="Method">
                   {row.method}
+                </span>
+                <span className="cell" data-label="Params">
+                  {row.params}
                 </span>
                 <span className="cell" data-label="Regime">
                   {row.regime}
