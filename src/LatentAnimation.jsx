@@ -9,25 +9,25 @@ import { useEffect, useRef, useCallback, useState } from "react";
 const NUM_ROWS = 3;
 const CFG = {
   layout: {
-    leftX: 0.08,
-    rightX: 0.92,
-    encoderX: 0.29,
-    decoderX: 0.71,
-    rowYs: [0.24, 0.45, 0.66],
-    imgSize: 0.13,
+    leftX: 0.10,
+    rightX: 0.90,
+    encoderX: 0.30,
+    decoderX: 0.70,
+    rowYs: [0.26, 0.44, 0.62],
+    imgSize: 0.14,
     boxHalf: 0.022,
   },
   blueDots: [
-    { x: 0.52, y: 0.38 },
-    { x: 0.47, y: 0.45 },
-    { x: 0.51, y: 0.52 },
+    { x: 0.52, y: 0.37 },
+    { x: 0.47, y: 0.44 },
+    { x: 0.52, y: 0.51 },
   ],
   genFinal: [
-    { x: 0.54, y: 0.39 },
-    { x: 0.48, y: 0.46 },
-    { x: 0.53, y: 0.53 },
+    { x: 0.54, y: 0.38 },
+    { x: 0.48, y: 0.45 },
+    { x: 0.54, y: 0.52 },
   ],
-  genAngles: [0.05 * Math.PI, 0.85 * Math.PI, 1.65 * Math.PI],
+  genAngles: [0.15 * Math.PI, 1.0 * Math.PI, 1.7 * Math.PI],
   colors: {
     steelBlue: "#2c6faa",
     iceBue: "#7bb8d9",
@@ -482,12 +482,12 @@ export default function LatentAnimation() {
       drawTraj(ctx, i, 1, 0.35 * (1 - t * 0.5));
       drawDot(ctx, CFG.genFinal[i].x, CFG.genFinal[i].y, CFG.colors.burntOrange, 0.8 * (1 - t * 0.3));
       // Phase 3 side-by-side
-      drawImg(ctx, imgs.current.input[i], 0.82, y, 0.07, t * 0.85, CFG.colors.steelBlue);
-      drawImg(ctx, imgs.current.gen[i], 0.93, y, 0.07, t, CFG.colors.burntOrange);
+      drawImg(ctx, imgs.current.input[i], 0.81, y, 0.08, t * 0.85, CFG.colors.steelBlue);
+      drawImg(ctx, imgs.current.gen[i], 0.92, y, 0.08, t, CFG.colors.burntOrange);
     }
     // Sub-headers
     drawText(ctx, "Input", L.leftX, 0.10, "#555", t * 0.8, 0.02, "600");
-    drawText(ctx, "Recon", 0.82, 0.155, CFG.colors.steelBlue, t * 0.85, 0.016, "600");
+    drawText(ctx, "Recon", 0.81, 0.155, CFG.colors.steelBlue, t * 0.85, 0.016, "600");
     drawText(ctx, "Gen", 0.93, 0.155, CFG.colors.burntOrange, t * 0.85, 0.016, "600");
     // Bottom text
     drawText(ctx, "A Single Latent Space", 0.5, 0.82, "#1a1a1a", t, 0.026, "800");
@@ -509,11 +509,11 @@ export default function LatentAnimation() {
       drawDot(ctx, CFG.blueDots[i].x, CFG.blueDots[i].y, CFG.colors.steelBlue, 0.75);
       drawTraj(ctx, i, 1, 0.25);
       drawDot(ctx, CFG.genFinal[i].x, CFG.genFinal[i].y, CFG.colors.burntOrange, 0.8);
-      drawImg(ctx, imgs.current.input[i], 0.82, y, 0.07, 0.85, CFG.colors.steelBlue);
-      drawImg(ctx, imgs.current.gen[i], 0.93, y, 0.07, 1, CFG.colors.burntOrange);
+      drawImg(ctx, imgs.current.input[i], 0.81, y, 0.08, 0.85, CFG.colors.steelBlue);
+      drawImg(ctx, imgs.current.gen[i], 0.92, y, 0.08, 1, CFG.colors.burntOrange);
     }
     drawText(ctx, "Input", L.leftX, 0.10, "#555", 0.8, 0.02, "600");
-    drawText(ctx, "Recon", 0.82, 0.155, CFG.colors.steelBlue, 0.85, 0.016, "600");
+    drawText(ctx, "Recon", 0.81, 0.155, CFG.colors.steelBlue, 0.85, 0.016, "600");
     drawText(ctx, "Gen", 0.93, 0.155, CFG.colors.burntOrange, 0.85, 0.016, "600");
     drawText(ctx, "A Single Latent Space", 0.5, 0.82, "#1a1a1a", 1, 0.026, "800");
     drawText(ctx, "Tokenization produces z in one deterministic step", 0.5, 0.86, CFG.colors.steelBlue, 0.9, 0.016, "500");
