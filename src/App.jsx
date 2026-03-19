@@ -56,8 +56,8 @@ const generationRows = [
   { method: "PixelFlow-XL/4", regime: "single-stage", fid: "1.98", is: "282.1" },
   { method: "JiT-H/16", regime: "single-stage", fid: "1.86", is: "303.4" },
   { method: "UNITE-XL (Ours)", regime: "single-stage", fid: "1.75", is: "309.9", ours: true },
-  { method: "DiT-XL/2", regime: "two-stage", fid: "2.27", is: "278.2", section: "Two-stage" },
-  { method: "SiT-XL/2", regime: "two-stage", fid: "2.06", is: "277.5" },
+  { method: "DiT-XL/2", regime: "two-stage", fid: "2.27", is: "278.2", section: "Two-stage", dimmed: true },
+  { method: "SiT-XL/2", regime: "two-stage", fid: "2.06", is: "277.5", dimmed: true },
   { method: "REPA-SiT-XL/2", regime: "two-stage + DINOv2", fid: "1.42", is: "305.7", section: "Two-stage + DINOv2", dimmed: true },
   { method: "DDT-XL/2", regime: "two-stage + DINOv2", fid: "1.26", is: "310.6", dimmed: true },
 ];
