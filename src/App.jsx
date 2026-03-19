@@ -205,7 +205,7 @@ function App() {
     <div className="shell">
       <header className="site-header">
         <a className="brand" href="#top">
-          UNITE
+          UNITE: Unified Tokenization and Latent Denoising
         </a>
         <nav className="site-nav">
           {navItems.map((item) => (

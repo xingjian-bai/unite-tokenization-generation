@@ -83,10 +83,10 @@ button {
 
 .brand {
   text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.28em;
-  font-size: 0.86rem;
+  letter-spacing: 0.06em;
+  font-size: 0.78rem;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .site-nav {
