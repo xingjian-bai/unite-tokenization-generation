@@ -116,41 +116,34 @@ button {
   margin: 1.75rem auto 5.5rem;
 }
 
-.citation-grid,
-.thesis-panel {
+.citation-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.4rem;
+  gap: 2rem;
 }
 
 .hero {
   margin-top: 0;
 }
 
-.hero-shell,
 .card {
   border: 1px solid rgba(255, 255, 255, 0.58);
   background: var(--card);
   box-shadow: var(--shadow);
 }
 
-.hero-shell,
 .card {
   border-radius: var(--radius-lg);
 }
 
 .hero-shell {
-  display: grid;
-  grid-template-columns: minmax(0, 0.96fr) minmax(0, 1.04fr);
-  gap: 1.6rem;
-  padding: 2rem;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.48), transparent 42%),
-    rgba(255, 251, 246, 0.94);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 .hero-copy {
-  padding: 0.5rem 0.3rem 0.2rem;
+  max-width: 44rem;
+  padding: 0.25rem 0 0;
 }
 
 .hero-kicker,
@@ -172,7 +165,7 @@ button {
 }
 
 .hero h1 {
-  font-size: clamp(3.8rem, 9vw, 6.8rem);
+  font-size: clamp(3.6rem, 8vw, 6rem);
   line-height: 0.9;
 }
 
@@ -193,7 +186,7 @@ button {
 }
 
 .hero-tags {
-  margin-top: 1.5rem;
+  margin-top: 1.15rem;
   display: flex;
   flex-wrap: wrap;
   gap: 0.7rem;
@@ -217,7 +210,7 @@ button {
 
 .hero-authors,
 .hero-meta {
-  margin: 1.25rem 0 0;
+  margin: 1rem 0 0;
   line-height: 1.7;
 }
 
@@ -230,7 +223,7 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: 0.8rem;
-  margin-top: 1.5rem;
+  margin-top: 1.15rem;
 }
 
 .button {
@@ -279,8 +272,8 @@ button {
   align-items: center;
   justify-content: center;
   min-height: 100%;
-  padding: 1rem;
-  border-radius: 24px;
+  padding: 0.75rem 0 0;
+  border-radius: 0;
   border: 1px solid rgba(17, 34, 56, 0.08);
   background:
     linear-gradient(135deg, rgba(39, 79, 134, 0.05), transparent 44%),
@@ -300,7 +293,7 @@ button {
 
 .section-heading {
   max-width: 38rem;
-  margin-bottom: 1.45rem;
+  margin-bottom: 1.2rem;
 }
 
 .section-heading h2 {
@@ -321,20 +314,28 @@ button {
 
 .narrative-band {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.15rem;
-  padding: 1rem 0;
+  grid-template-columns: 1fr;
+  gap: 0;
+  padding: 0;
   border-top: 1px solid rgba(17, 34, 56, 0.08);
-  border-bottom: 1px solid rgba(17, 34, 56, 0.08);
 }
 
 .narrative-step {
+  position: relative;
   min-width: 0;
+  padding: 1rem 0 1rem 1.2rem;
+  border-bottom: 1px solid rgba(17, 34, 56, 0.08);
 }
 
-.narrative-step:not(:last-child) {
-  padding-right: 1rem;
-  border-right: 1px solid rgba(17, 34, 56, 0.08);
+.narrative-step::before {
+  content: "";
+  position: absolute;
+  left: 0.1rem;
+  top: 1.32rem;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 999px;
+  background: var(--accent);
 }
 
 .narrative-step h3,
@@ -357,21 +358,18 @@ button {
 }
 
 .thesis-panel {
-  margin-top: 1.5rem;
-  align-items: center;
+  margin-top: 1.7rem;
 }
 
 .thesis-copy {
-  padding-right: 0.8rem;
-}
-
-.thesis-note {
-  max-width: 35rem;
+  max-width: 38rem;
+  padding-right: 0;
 }
 
 .thesis-figure,
 .loop-panel-figure {
-  padding: 0.75rem 0;
+  margin-top: 0.8rem;
+  padding: 0.9rem 0 0;
 }
 
 .thesis-figure img,
@@ -381,7 +379,7 @@ button {
 }
 
 .loop-panel {
-  margin-top: 1.8rem;
+  margin-top: 2rem;
   padding-top: 1.6rem;
   border-top: 1px solid rgba(17, 34, 56, 0.08);
 }
@@ -392,14 +390,19 @@ button {
 
 .loop-sequence {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.2rem;
+  grid-template-columns: 1fr;
+  gap: 0;
   margin-top: 1rem;
+  max-width: 38rem;
 }
 
 .sequence-step {
-  padding-top: 1rem;
-  border-top: 2px solid rgba(17, 34, 56, 0.12);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  align-items: start;
+  padding: 0.95rem 0;
+  border-top: 1px solid rgba(17, 34, 56, 0.1);
 }
 
 .sequence-step span {
@@ -408,7 +411,6 @@ button {
   justify-content: center;
   width: 2rem;
   height: 2rem;
-  margin-bottom: 0.7rem;
   border-radius: 999px;
   background: rgba(39, 79, 134, 0.08);
   color: var(--blue);
@@ -418,7 +420,7 @@ button {
 }
 
 .sequence-step h3 {
-  margin: 0;
+  margin: 0.2rem 0 0;
   font-size: 1.12rem;
   line-height: 1.3;
 }
@@ -427,9 +429,10 @@ button {
   display: flex;
   align-items: baseline;
   gap: 1rem;
-  margin-top: 0.9rem;
+  margin-top: 0.7rem;
   padding-top: 0.9rem;
   border-top: 1px solid rgba(17, 34, 56, 0.08);
+  max-width: 38rem;
 }
 
 .detach-note span {
@@ -459,17 +462,15 @@ button {
 }
 
 .proof-strip {
-  grid-column: 1 / -1;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin-top: 0.2rem;
-  padding-top: 1.15rem;
+  margin-top: 0.1rem;
+  padding-top: 1rem;
   border-top: 1px solid rgba(17, 34, 56, 0.08);
 }
 
 .stat-card {
   min-height: auto;
-  padding: 0.15rem 0.15rem 0.25rem;
-  border-radius: var(--radius-md);
+  padding: 0.2rem 0 0.25rem;
 }
 
 .stat-card span,
@@ -501,9 +502,6 @@ button {
   align-items: stretch;
 }
 
-.story-card,
-.loop-step,
-.detach-card,
 .table-card,
 .sample-card,
 .analysis-card,
@@ -512,17 +510,27 @@ button {
   padding: 1.35rem;
 }
 
-.story-card,
-.loop-step,
-.detach-card,
-.table-card,
+.table-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.35rem;
+  border: 1px solid rgba(17, 34, 56, 0.08);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 252, 246, 0.72);
+  box-shadow: 0 12px 28px rgba(21, 33, 51, 0.05);
+}
+
 .sample-card,
 .analysis-card,
 .citation-card,
 .montage-card {
+  padding: 0;
   display: flex;
   flex-direction: column;
   height: 100%;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .story-card h3,
@@ -613,8 +621,9 @@ button {
 }
 
 .results-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   align-items: stretch;
+  gap: 1.5rem;
 }
 
 .table-wrap {
@@ -678,7 +687,7 @@ button {
 
 .sample-header {
   max-width: 40rem;
-  margin-top: 1.6rem;
+  margin-top: 2.2rem;
 }
 
 .sample-grid {
@@ -741,7 +750,8 @@ button {
 }
 
 .analysis-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
+  gap: 2rem;
 }
 
 .analysis-frame,
@@ -771,7 +781,7 @@ button {
 }
 
 .analysis-card h3 {
-  margin-top: 0.95rem;
+  margin-top: 0.9rem;
   font-size: 1.16rem;
 }
 
@@ -784,6 +794,11 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+}
+
+.citation-card {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(17, 34, 56, 0.08);
 }
 
 pre {
@@ -833,13 +848,6 @@ pre {
     grid-template-columns: 1fr;
   }
 
-  .narrative-step:not(:last-child) {
-    padding-right: 0;
-    padding-bottom: 1.2rem;
-    border-right: 0;
-    border-bottom: 1px solid rgba(17, 34, 56, 0.08);
-  }
-
   .detach-note {
     flex-direction: column;
     align-items: flex-start;
@@ -852,7 +860,7 @@ pre {
   }
 
   .hero-shell {
-    padding: 2rem;
+    gap: 1rem;
   }
 }
 

@@ -350,7 +350,7 @@ function App() {
 
           <div className="sample-grid">
             {sampleCards.map((card) => (
-              <article className="card sample-card reveal" key={card.title}>
+              <article className="sample-card reveal" key={card.title}>
                 <div className="sample-frame">
                   <img src={card.image} alt={card.title} loading="lazy" />
                 </div>
@@ -361,7 +361,7 @@ function App() {
 
           <div className="montage-grid">
             {sampleMontages.map((card) => (
-              <article className="card montage-card reveal" key={card.title}>
+              <article className="montage-card reveal" key={card.title}>
                 <div className="montage-frame">
                   <img src={card.image} alt={card.title} loading="lazy" />
                 </div>
@@ -379,7 +379,7 @@ function App() {
 
           <div className="analysis-grid">
             {analysisCards.map((card) => (
-              <article className="card analysis-card reveal" key={card.title}>
+              <article className="analysis-card reveal" key={card.title}>
                 <div className="analysis-frame">
                   <img src={card.image} alt={card.title} loading="lazy" />
                 </div>
@@ -391,7 +391,7 @@ function App() {
         </section>
 
         <section className="section citation-grid" id="citation">
-          <article className="card citation-card reveal">
+          <article className="citation-card reveal">
             <p className="card-kicker">Paper</p>
             <h3>Paper PDF</h3>
             <div className="resource-links">
@@ -401,7 +401,7 @@ function App() {
             </div>
           </article>
 
-          <article className="card citation-card reveal">
+          <article className="citation-card reveal">
             <div className="citation-head">
               <div>
                 <p className="card-kicker">Citation</p>
