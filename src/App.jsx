@@ -344,10 +344,6 @@ function App() {
               ))}
             </div>
 
-            <div className="detach-note reveal">
-              <span>Why detach?</span>
-              <p>Blocking the denoising gradient through tokenization keeps both losses symmetric — reconstruction and denoising update the shared weights via separate backward passes.</p>
-            </div>
           </div>
 
           <div className="animation-panel reveal" id="animation">
