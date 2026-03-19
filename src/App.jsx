@@ -51,10 +51,17 @@ const statCards = [
 ];
 
 const generationRows = [
-  { method: "JiT-B/16", regime: "single-stage pixel", fid: "3.66", is: "275.1" },
-  { method: "UNITE-B", regime: "single-stage latent", fid: "2.27", is: "311.8", ours: true },
-  { method: "DiT-XL/2", regime: "two-stage latent", fid: "2.27", is: "278.2" },
-  { method: "UNITE-XL-L", regime: "single-stage latent", fid: "1.82", is: "303.8", ours: true },
+  { method: "JiT-B/16", regime: "single-stage", fid: "3.66", is: "275.1" },
+  { method: "UNITE-B (Ours)", regime: "single-stage", fid: "2.12", is: "294.1", ours: true },
+  { method: "JiT-L/16", regime: "single-stage", fid: "2.36", is: "298.5" },
+  { method: "UNITE-L (Ours)", regime: "single-stage", fid: "1.73", is: "296.0", ours: true },
+  { method: "PixelFlow-XL/4", regime: "single-stage", fid: "1.98", is: "282.1" },
+  { method: "JiT-H/16", regime: "single-stage", fid: "1.86", is: "303.4" },
+  { method: "UNITE-XL (Ours)", regime: "single-stage", fid: "1.75", is: "309.9", ours: true },
+  { method: "DiT-XL/2", regime: "two-stage", fid: "2.27", is: "278.2" },
+  { method: "SiT-XL/2", regime: "two-stage", fid: "2.06", is: "277.5" },
+  { method: "REPA-SiT-XL/2", regime: "two-stage + DINOv2", fid: "1.42", is: "305.7" },
+  { method: "DDT-XL/2", regime: "two-stage + DINOv2", fid: "1.26", is: "310.6" },
 ];
 
 const reconstructionRows = [
@@ -365,7 +372,7 @@ function App() {
           <SectionHeading
             kicker="Results"
             title="No DINO, no adversarial loss, single-stage."
-            subtitle="ImageNet gFID 2.27 (Base) and 1.82 (XL) — competitive with DiT, RAE, JiT, and REPA, all without pretrained teachers or multi-stage pipelines."
+            subtitle="ImageNet gFID 2.12 (Base), 1.73 (L), 1.75 (XL) — competitive with DiT, JiT, REPA, and DDT, all without pretrained teachers or multi-stage pipelines."
             small
           />
 
