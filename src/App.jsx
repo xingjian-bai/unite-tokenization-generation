@@ -271,6 +271,9 @@ function App() {
                 <a className="button" href="#story">
                   Main Idea
                 </a>
+                <a className="button" href="https://github.com/ShivamDuggal4/UNITE" target="_blank" rel="noopener noreferrer">
+                  GitHub
+                </a>
               </div>
             </div>
 
