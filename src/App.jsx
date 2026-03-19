@@ -1,55 +1,46 @@
 import { useEffect } from "react";
 
 const navItems = [
-  { label: "Opening", href: "#story" },
-  { label: "Method", href: "#idea" },
+  { label: "Idea", href: "#story" },
   { label: "Results", href: "#results" },
-  { label: "Citation", href: "#citation" },
+  { label: "Paper", href: "#citation" },
 ];
 
 const storyCards = [
   {
     eyebrow: "Staged training",
-    title: "Tokenizer first. Generator later.",
-    body: "Most latent diffusion pipelines freeze a tokenizer, then train a separate denoiser on top.",
+    title: "Freeze a tokenizer. Then train a generator.",
   },
   {
     eyebrow: "Naive end-to-end",
-    title: "Backprop through z = E(x) is not enough.",
-    body: "Easy-to-denoise latents can be low-information latents. Better denoising loss does not automatically mean better samples.",
+    title: "Naive joint training can still learn weak latents.",
   },
   {
     eyebrow: "UNITE",
-    title: "One weight-shared encoder for both modes.",
-    body: "Tokenization and denoising are two versions of the same latent inference problem, so we train them together from scratch.",
+    title: "One weight-shared encoder handles both modes.",
   },
 ];
 
 const loopSteps = [
   {
     number: "01",
-    title: "Tokenize",
-    body: "Run the shared encoder on image patches and latent registers to get the clean latent z0.",
+    title: "Image -> clean latent z0",
   },
   {
     number: "02",
-    title: "Detach + noise",
-    body: "Stop-gradient on z0, then corrupt it into zt for the denoising objective.",
+    title: "Detach + noise -> zt",
   },
   {
     number: "03",
-    title: "Denoise with the same weights",
-    body: "Run the same encoder again, now without image patches, to predict the clean latent.",
+    title: "Same encoder predicts z0",
   },
 ];
 
 const statCards = [
-  { label: "Training regime", value: "Single-stage", note: "tokenizer + generator together" },
-  { label: "External teacher", value: "None", note: "no DINO, train from scratch" },
+  { label: "Training", value: "Single-stage", note: "one loop" },
+  { label: "Teacher", value: "None", note: "no DINO" },
   { label: "ImageNet FID", value: "2.27", note: "UNITE-B" },
-  { label: "Best XL FID", value: "1.82", note: "UNITE-XL-L" },
-  { label: "Reconstruction rFID", value: "1.01", note: "no adv., no teacher" },
-  { label: "QM9 match", value: "99.37%", note: "single-stage beyond vision" },
+  { label: "Reconstruction", value: "1.01", note: "rFID" },
 ];
 
 const generationRows = [
@@ -85,14 +76,12 @@ const sampleMontages = [
 
 const analysisCards = [
   {
-    title: "Weight sharing gives the best reconstruction / generation tradeoff",
+    title: "Best reconstruction / generation tradeoff",
     image: "./assets/figures/stop_grad_ablations_sep_vs_ours.png",
-    body: "The shared setting improves sampleability without giving up reconstruction quality.",
   },
   {
-    title: "Tokenizer and denoiser already want similar representations",
+    title: "Tokenizer and denoiser align across layers",
     image: "./assets/figures/cka_ablation_plot_v2.png",
-    body: "Layer-wise similarity helps explain why one encoder can serve both roles.",
   },
 ];
 
@@ -115,10 +104,10 @@ function SectionHeading({ kicker, title, subtitle }) {
 
 function GenerationTable() {
   return (
-    <div className="table-card reveal">
+      <div className="table-card reveal">
       <div className="table-title">
         <p className="card-kicker">ImageNet-256 generation</p>
-        <h3>Competitive latent diffusion, trained jointly from scratch</h3>
+        <h3>Strong ImageNet generation</h3>
       </div>
       <div className="table-wrap">
         <div className="result-table table-four">
@@ -152,10 +141,10 @@ function GenerationTable() {
 
 function ReconstructionTable() {
   return (
-    <div className="table-card reveal">
+      <div className="table-card reveal">
       <div className="table-title">
         <p className="card-kicker">Reconstruction</p>
-        <h3>Strong tokenizer quality without an external teacher</h3>
+        <h3>Strong tokenizer quality</h3>
       </div>
       <div className="table-wrap">
         <div className="result-table table-three">
@@ -236,8 +225,8 @@ function App() {
                 End-to-End Training for Unified Tokenization and Latent Denoising
               </p>
               <p className="hero-summary">
-                A single-stage latent diffusion model where one weight-shared
-                Generative Encoder acts as both tokenizer and denoiser.
+                Single-stage latent diffusion from scratch, with one
+                weight-shared encoder for tokenization and denoising.
               </p>
               <div className="hero-tags">
                 <span>Single-stage</span>
@@ -256,8 +245,8 @@ function App() {
                 <a className="button primary" href="./assets/docs/unite-paper.pdf">
                   Paper PDF
                 </a>
-                <a className="button" href="#results">
-                  Key Results
+                <a className="button" href="#story">
+                  Main Idea
                 </a>
               </div>
             </div>
@@ -281,8 +270,7 @@ function App() {
         <section className="section opening-section" id="story">
           <SectionHeading
             kicker="Opening"
-            title="From staged latent diffusion to one shared encoder"
-            subtitle="The argument is simple: staged pipelines are unsatisfying, naive end-to-end is unstable, and weight sharing gives a cleaner solution."
+            title="One shared encoder replaces two-stage training"
           />
 
           <div className="narrative-band reveal">
@@ -290,7 +278,7 @@ function App() {
               <article className="narrative-step" key={card.title}>
                 <p className="card-kicker">{card.eyebrow}</p>
                 <h3>{card.title}</h3>
-                <p>{card.body}</p>
+                {card.body ? <p>{card.body}</p> : null}
               </article>
             ))}
           </div>
@@ -300,14 +288,8 @@ function App() {
               <p className="card-kicker">Core idea</p>
               <h3>Tokenization is generation with strong observability.</h3>
               <p>
-                With an image, latent inference is tightly constrained. With
-                noise, the same problem becomes weakly conditioned. UNITE uses
-                one shared Generative Encoder for both regimes.
-              </p>
-              <p className="thesis-note">
-                Not a larger pipeline. Not a stronger teacher. A simpler latent
-                diffusion recipe where tokenization and denoising co-design the
-                same latent space from scratch.
+                UNITE uses one encoder for image-conditioned inference and
+                noise-conditioned inference.
               </p>
             </div>
 
@@ -323,11 +305,7 @@ function App() {
           <div className="loop-panel" id="loop">
             <div className="loop-intro reveal">
               <p className="card-kicker">Training loop</p>
-              <h3>One encoder. Two passes. One loop.</h3>
-              <p>
-                Tokenize the image, stop-gradient and noise the latent, then
-                denoise with the same shared weights.
-              </p>
+              <h3>One encoder. Two passes.</h3>
             </div>
 
             <div className="loop-panel-figure reveal">
@@ -343,17 +321,14 @@ function App() {
                 <article className="sequence-step reveal" key={step.number}>
                   <span>{step.number}</span>
                   <h3>{step.title}</h3>
-                  <p>{step.body}</p>
+                  {step.body ? <p>{step.body}</p> : null}
                 </article>
               ))}
             </div>
 
             <div className="detach-note reveal">
               <span>Detach matters</span>
-              <p>
-                It blocks the shortcut through the clean latent, while both
-                objectives still update the same shared weights.
-              </p>
+              <p>It blocks the shortcut through the clean latent.</p>
             </div>
           </div>
         </section>
@@ -361,8 +336,7 @@ function App() {
         <section className="section" id="results">
           <SectionHeading
             kicker="Results"
-            title="From scratch. No DINO. Competitive ImageNet."
-            subtitle="UNITE is concise in design and strong in practice."
+            title="From scratch, with strong generation and reconstruction"
           />
 
           <div className="results-grid">
@@ -372,7 +346,7 @@ function App() {
 
           <div className="sample-header reveal">
             <p className="card-kicker">Qualitative samples</p>
-            <h3>Jointly trained latents still generate clean, diverse images</h3>
+            <h3>Samples</h3>
           </div>
 
           <div className="sample-grid">
@@ -384,11 +358,6 @@ function App() {
                 <h3>{card.title}</h3>
               </article>
             ))}
-          </div>
-
-          <div className="sample-header reveal sample-header-secondary">
-            <p className="card-kicker">More classes</p>
-            <h3>Additional class montages from the same jointly trained model</h3>
           </div>
 
           <div className="montage-grid">
@@ -403,11 +372,10 @@ function App() {
           </div>
         </section>
 
-        <section className="section">
+        <section className="section" id="analysis">
           <SectionHeading
             kicker="Why Weight Sharing Works"
-            title="Cleaner idea, better tradeoff"
-            subtitle="The shared encoder is not only conceptually simpler. It also gives a strong reconstruction-generation balance."
+            title="Why sharing helps"
           />
 
           <div className="analysis-grid">
@@ -417,7 +385,7 @@ function App() {
                   <img src={card.image} alt={card.title} loading="lazy" />
                 </div>
                 <h3>{card.title}</h3>
-                <p>{card.body}</p>
+                {card.body ? <p>{card.body}</p> : null}
               </article>
             ))}
           </div>
@@ -426,13 +394,10 @@ function App() {
         <section className="section citation-grid" id="citation">
           <article className="card citation-card reveal">
             <p className="card-kicker">Paper</p>
-            <h3>Resources</h3>
+            <h3>Paper PDF</h3>
             <div className="resource-links">
               <a className="button primary" href="./assets/docs/unite-paper.pdf">
                 Open PDF
-              </a>
-              <a className="button" href="#results">
-                View Results
               </a>
             </div>
           </article>
