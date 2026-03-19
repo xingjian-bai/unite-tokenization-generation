@@ -278,7 +278,7 @@ function App() {
             </div>
 
             <div className="hero-figure">
-              <img src="./assets/figures/teaser2.png" alt="UNITE teaser figure" />
+              <LatentAnimation />
             </div>
 
             <div className="proof-strip">
@@ -358,7 +358,9 @@ function App() {
               <p className="card-kicker">Inference: both reconstruction and generation</p>
               <h3>One latent space, two modes</h3>
             </div>
-            <LatentAnimation />
+            <div className="hero-figure">
+              <img src="./assets/figures/teaser2.png" alt="UNITE teaser figure" loading="lazy" />
+            </div>
           </div>
         </section>
 
