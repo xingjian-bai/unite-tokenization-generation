@@ -73,8 +73,8 @@ const sampleMontages = [
   { title: "Class 207: Golden Retriever", image: "./assets/samples/summary_207_golden_retriever.png" },
   { title: "Class 309: Bee", image: "./assets/samples/summary_309_bee.png" },
   { title: "Class 470: Candle", image: "./assets/samples/summary_470_candle.png" },
-  { title: "Class 725: Plane", image: "./assets/samples/summary_725_plane.png" },
-  { title: "Class 930: Ice Cream", image: "./assets/samples/summary_930_ice_cream.png" },
+  { title: "Class 725: Pitcher", image: "./assets/samples/summary_725_plane.png" },
+  { title: "Class 930: French Loaf", image: "./assets/samples/summary_930_ice_cream.png" },
 ];
 
 const analysisCards = [
@@ -320,14 +320,6 @@ function App() {
                 UNITE uses one encoder for image-conditioned inference and
                 noise-conditioned inference.
               </p>
-            </div>
-
-            <div className="thesis-figure reveal">
-              <img
-                src="./assets/figures/shared_latent_space5.png"
-                alt="Shared latent space figure"
-                loading="lazy"
-              />
             </div>
           </div>
 
