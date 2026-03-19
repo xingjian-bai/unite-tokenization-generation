@@ -404,7 +404,10 @@ button {
 .thesis-figure,
 .loop-panel-figure {
   margin-top: 0.8rem;
+  margin-left: auto;
+  margin-right: auto;
   padding: 0.9rem 0 0;
+  max-width: 42rem;
 }
 
 .thesis-figure img,
