@@ -406,6 +406,7 @@ function App() {
             kicker="Analysis"
             title="Why does weight sharing work?"
             subtitle="Tokenization and denoising are intrinsically aligned — even without shared weights, the two pathways learn similar representations."
+            small
           />
 
           <div className="analysis-grid">
