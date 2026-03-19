@@ -25,15 +25,18 @@ const storyCards = [
 const loopSteps = [
   {
     number: "01",
-    title: "Image -> clean latent z0",
+    title: "Tokenize",
+    body: "The Generative Encoder tokenizes the image into K clean latent tokens z₀.",
   },
   {
     number: "02",
-    title: "Detach + noise -> zt",
+    title: "Detach + noise",
+    body: "Detach z₀ from the graph, then add noise to get zₜ. Detach blocks the denoising gradient from taking shortcuts through tokenization.",
   },
   {
     number: "03",
-    title: "Same encoder predicts z0",
+    title: "Denoise",
+    body: "The same encoder (no image this time) predicts z₀ from zₜ. Both losses update the shared weights via separate backward passes.",
   },
 ];
 
@@ -79,11 +82,13 @@ const sampleMontages = [
 
 const analysisCards = [
   {
-    title: "Best reconstruction / generation tradeoff",
+    title: "Weight sharing gives the best rFID / gFID tradeoff",
+    body: "No-sharing performs well, but weight sharing yields the best combination. More flow iterations per tokenization step make the latents more sampleable (better gFID) without hurting rFID.",
     image: "./assets/figures/stop_grad_ablations_sep_vs_ours.png",
   },
   {
-    title: "Tokenizer and denoiser align across layers",
+    title: "Tokenization and denoising are intrinsically aligned",
+    body: "High layer-wise CKA between encoder and denoiser in both shared and non-shared settings — the two tasks naturally learn similar representations even without forcing them to share weights.",
     image: "./assets/figures/cka_ablation_plot_v2.png",
   },
 ];
@@ -302,16 +307,23 @@ function App() {
               <p className="card-kicker">Core idea</p>
               <h3>Tokenization is generation with strong observability.</h3>
               <p>
-                One encoder for image-conditioned inference and
-                noise-conditioned inference.
+                Tokenization infers latents from a fully observed image;
+                generation infers them from noise. Same inference problem, different conditioning.
+                One weight-shared <strong>Generative Encoder</strong> handles both modes,
+                learning a common latent language where the same attention and MLP weights
+                support both — conditioning on an image yields a near-deterministic latent,
+                while starting from noise yields a broader distribution for sampling.
               </p>
             </div>
           </div>
 
           <div className="loop-panel" id="loop">
             <div className="loop-intro reveal">
-              <p className="card-kicker">Training loop</p>
-              <h3>One encoder. Two passes.</h3>
+              <p className="card-kicker">Training</p>
+              <h3>One encoder. Two forward passes. One loop.</h3>
+              <p className="loop-desc">
+                The Generative Encoder tokenizes an image, then denoises its own noised latents — all in a single training step.
+              </p>
             </div>
 
             <div className="loop-panel-figure reveal">
@@ -333,15 +345,19 @@ function App() {
             </div>
 
             <div className="detach-note reveal">
-              <span>Detach matters</span>
-              <p>It blocks the shortcut through the clean latent.</p>
+              <span>Why detach?</span>
+              <p>Blocking the denoising gradient through tokenization keeps both losses symmetric — reconstruction and denoising update the shared weights via separate backward passes.</p>
             </div>
           </div>
 
           <div className="animation-panel reveal" id="animation">
             <div className="section-heading">
-              <p className="card-kicker">Inference: both reconstruction and generation</p>
-              <h3>One latent space, two modes</h3>
+              <p className="card-kicker">Inference</p>
+              <h3>Both reconstruction and generation</h3>
+              <p className="section-desc">
+                At inference, the same encoder either tokenizes an image for reconstruction
+                or iteratively denoises from pure noise for generation — two modes from one model.
+              </p>
             </div>
             <div className="hero-figure">
               <img src="./assets/figures/teaser2.png" alt="UNITE teaser figure" loading="lazy" />
@@ -352,7 +368,8 @@ function App() {
         <section className="section" id="results">
           <SectionHeading
             kicker="Results"
-            title="From scratch, with strong generation and reconstruction"
+            title="No DINO, no adversarial loss, single-stage"
+            subtitle="ImageNet gFID 2.27 (Base) and 1.82 (XL) — competitive with DiT, RAE, JiT, and REPA, all without pretrained teachers or multi-stage pipelines."
           />
 
           <div className="results-grid">
@@ -389,8 +406,9 @@ function App() {
 
         <section className="section" id="analysis">
           <SectionHeading
-            kicker="Why Weight Sharing Works"
-            title="Why sharing helps"
+            kicker="Analysis"
+            title="Why does weight sharing work?"
+            subtitle="Tokenization and denoising are intrinsically aligned — even without shared weights, the two pathways learn similar representations."
           />
 
           <div className="analysis-grid">

@@ -325,7 +325,8 @@ button {
   line-height: 0.95;
 }
 
-.section-subtitle {
+.section-subtitle,
+.section-desc {
   margin: 0.8rem 0 0;
   font-size: 1.02rem;
   line-height: 1.72;
