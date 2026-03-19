@@ -14,7 +14,7 @@ const CFG = {
     encoderX: 0.29,
     decoderX: 0.71,
     rowYs: [0.24, 0.45, 0.66],
-    imgSize: 0.10,
+    imgSize: 0.13,
     boxHalf: 0.022,
   },
   blueDots: [
