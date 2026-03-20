@@ -285,7 +285,7 @@ function App() {
                 <a className="button primary" href="./assets/docs/unite-paper.pdf">
                   Paper PDF
                 </a>
-                <a className="button" href="https://github.com/ShivamDuggal4/UNITE" target="_blank" rel="noopener noreferrer">
+                <a className="button" href="https://github.com/ShivamDuggal4/united-dev/" target="_blank" rel="noopener noreferrer">
                   GitHub
                 </a>
               </div>
