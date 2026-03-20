@@ -398,8 +398,7 @@ function App() {
           </div>
 
           <div className="sample-header reveal">
-            <p className="card-kicker">Qualitative samples</p>
-            <h3>Samples</h3>
+            <p className="card-kicker">Samples from ImageNet 256×256</p>
           </div>
 
           <div className="samples-featured">
