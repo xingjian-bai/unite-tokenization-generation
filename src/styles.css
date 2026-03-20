@@ -839,17 +839,16 @@ button {
 
 .analysis-frame,
 .figure-card {
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.58);
+  border-radius: 0;
+  background: transparent;
 }
 
 .analysis-frame {
-  aspect-ratio: 16 / 10;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem;
-  border: 1px solid rgba(17, 34, 56, 0.08);
+  padding: 0;
+  border: none;
 }
 
 .analysis-frame img,
@@ -859,7 +858,6 @@ button {
 
 .analysis-frame img {
   height: auto;
-  max-height: 100%;
   object-fit: contain;
 }
 
