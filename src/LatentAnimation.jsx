@@ -399,7 +399,7 @@ export default function LatentAnimation() {
     drawGaussian(ctx, 0.12);
     drawText(ctx, "Phase 2: Generation", 0.5, 0.04, CFG.colors.burntOrange, 1, 0.03, "800");
     drawText(ctx, "Input", L.leftX, 0.10, "#555", 1, 0.024, "600");
-    drawText(ctx, "Generated", L.rightX, 0.10, "#555", 1, 0.024, "600");
+    drawText(ctx, "Generated", L.rightX, 0.10, CFG.colors.burntOrange, 1, 0.024, "600");
 
     // Dimmed Phase 1
     for (let i = 0; i < NUM_ROWS; i++) {
