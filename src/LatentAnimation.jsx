@@ -624,11 +624,11 @@ export default function LatentAnimation() {
           left: "50%",
           transform: "translateX(-50%)",
           display: "flex",
-          gap: 4,
+          gap: 8,
           background: "rgba(255,255,255,0.9)",
-          padding: "4px 6px",
-          borderRadius: 20,
-          fontSize: 12,
+          padding: "6px 10px",
+          borderRadius: 24,
+          fontSize: 13,
           zIndex: 10,
           backdropFilter: "blur(8px)",
         }}
@@ -653,10 +653,10 @@ export default function LatentAnimation() {
 
 const btnStyle = {
   border: "none",
-  padding: "4px 10px",
-  borderRadius: 8,
+  padding: "6px 16px",
+  borderRadius: 10,
   cursor: "pointer",
   fontWeight: 600,
-  fontSize: 11,
+  fontSize: 13,
   fontFamily: "inherit",
 };
