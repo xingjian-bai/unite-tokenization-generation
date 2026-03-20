@@ -345,7 +345,7 @@ function App() {
           <div className="loop-panel" id="loop">
             <div className="loop-intro reveal">
               <p className="card-kicker">Training</p>
-              <h3>Training pipeline</h3>
+              <h3>Two forward passes, one shared encoder</h3>
               <p className="loop-desc">
                 Pass 1: the Generative Encoder tokenizes an image into latents, which the decoder reconstructs back to pixels.
                 Pass 2: those same latents are noised, and the <em>same</em> Generative Encoder denoises them — learning to generate by denoising its own representations.
