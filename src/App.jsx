@@ -378,11 +378,10 @@ function App() {
         </section>
 
         <section className="section" id="results">
-          <SectionHeading
-            kicker="Results"
-            title="Single-stage, end-to-end — no pre-trained DINO, no adversarial loss"
-            small
-          />
+          <div className="loop-intro reveal">
+            <p className="card-kicker">Results</p>
+            <h3>Single-stage, end-to-end — no pre-trained DINO, no adversarial loss</h3>
+          </div>
 
           <div className="results-grid">
             <GenerationTable />
