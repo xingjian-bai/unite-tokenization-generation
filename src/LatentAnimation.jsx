@@ -448,21 +448,21 @@ export default function LatentAnimation() {
     const labelOffsets = [
       // Traj 0: lower-right → upper-center (labels to the right of trajectory)
       [
-        [0, "t=1.0", 0.042, 0.012],
-        [2, "t=0.5", 0.042, 0.0],
-        [NUM_SEGMENTS, "t=0.0", 0.042, -0.012],
+        [0, "t=1.0", 0.035, 0.010],
+        [2, "t=0.5", 0.035, 0.0],
+        [NUM_SEGMENTS, "t=0.0", 0.045, -0.010],
       ],
       // Traj 1: lower-left → center (labels to the left / below)
       [
         [0, "t=1.0", -0.042, 0.025],
         [2, "t=0.5", -0.02, 0.05],
-        [NUM_SEGMENTS, "t=0.0", -0.058, 0.025],
+        [NUM_SEGMENTS, "t=0.0", -0.055, 0.008],
       ],
       // Traj 2: upper-left → center (labels to the left / above)
       [
-        [0, "t=1.0", -0.042, -0.02],
-        [2, "t=0.5", -0.048, 0.005],
-        [NUM_SEGMENTS, "t=0.0", 0.055, 0.035],
+        [0, "t=1.0", -0.035, -0.016],
+        [2, "t=0.5", -0.04, 0.005],
+        [NUM_SEGMENTS, "t=0.0", 0.035, 0.018],
       ],
     ];
 
