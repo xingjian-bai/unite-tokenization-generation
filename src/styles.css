@@ -388,7 +388,7 @@ button {
 .loop-intro p,
 .sequence-step p,
 .detach-note p {
-  margin-top: 0.6rem;
+  margin-top: 0.9rem;
   line-height: 1.58;
   color: var(--muted);
   text-align: justify;
@@ -462,7 +462,7 @@ button {
   grid-template-columns: 1fr auto;
   gap: 0.6rem;
   align-items: start;
-  padding: 0.6rem 0;
+  padding: 0.8rem 0;
   border-top: 1px solid rgba(17, 34, 56, 0.08);
 }
 
