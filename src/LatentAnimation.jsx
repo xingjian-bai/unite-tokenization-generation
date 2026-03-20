@@ -40,7 +40,7 @@ const CFG = {
   // ── Stage timing (ms) — tune independently ──
   phase1: { rowDelay: 2100, encDelay: 375, dotDelay: 825, lblDelay: 975, decDelay: 1275, fadeIn: 675, freeze: 825, popDur: 750, popScale: 2.2 },
   trans12: { duration: 1125 },
-  phase2: { trajDelay: 3600, trajDur: 2700, decDelay: 270, fadeIn: 600, freeze: 1050, popDur: 750, popScale: 2.2 },
+  phase2: { trajDelay: 4220, trajDur: 2700, decDelay: 270, fadeIn: 600, popDur: 750, popPause: 500, freeze: 1050, popScale: 2.2 },
   trans23: { duration: 1650 },
   phase3: { hold: 10500, breathMs: 4500 },
 };
