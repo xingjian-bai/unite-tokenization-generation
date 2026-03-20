@@ -86,23 +86,7 @@ const gridSamples = [
   { title: "Class 930: French Loaf", image: "./assets/samples/summary_930_ice_cream.png" },
 ];
 
-const analysisCards = [
-  {
-    title: "Tokenization and denoising are intrinsically aligned",
-    body: "Both the weight-shared Generative Encoder and a separate encoder–denoiser variant exhibit high layer-wise CKNNA/CKA alignment, indicating that tokenization and denoising are intrinsically aligned tasks. This clarifies the role of weight sharing: when the two tasks already align, parameter tying becomes a principled way to remove redundancy in the reusable attention and MLP sublayers.",
-    image: "./assets/figures/cka_cknna_ablation.png",
-  },
-  {
-    title: "Weight sharing yields the best reconstruction–generation trade-off",
-    body: "While a separate encoder–denoiser ablation is competitive, parameter tying yields the best overall rFID / gFID trade-off. Under weight sharing, increasing the number of flow iterations consistently improves generation fidelity — reducing gFID from 3.33 to 2.12 — while maintaining or slightly improving reconstruction, suggesting the latent space becomes more sampleable without sacrificing information.",
-    image: "./assets/figures/stop_grad_ablations_sep_vs_ours.png",
-  },
-  {
-    title: "Stop-gradient preserves cleaner shared representations",
-    body: "Without stop-gradient, CKA and cosine-similarity alignment between the tokenization and denoising pathways drops, and intermediate denoised reconstructions become noticeably noisier. Stopping denoising gradients through the clean latent helps preserve a more cleanly shared representation between the two modes.",
-    image: "./assets/figures/denoising_analysis_v2.png",
-  },
-];
+/* Analysis figures and text are rendered inline below for clearer figure–text pairing */
 
 const bibtex = `@article{duggal2026unite,
   title   = {End-to-End Training for Unified Tokenization and Latent Denoising},
@@ -440,15 +424,40 @@ function App() {
           />
 
           <div className="analysis-grid">
-            {analysisCards.map((card) => (
-              <article className="analysis-card reveal" key={card.title}>
-                <div className="analysis-frame">
-                  <img src={card.image} alt={card.title} loading="lazy" />
-                </div>
-                <h3>{card.title}</h3>
-                {card.body ? <p>{card.body}</p> : null}
-              </article>
-            ))}
+            <article className="analysis-card reveal">
+              <div className="analysis-frame analysis-frame-narrow">
+                <img src="./assets/figures/stop_grad_ablations_sep_vs_ours_latest.png" alt="Weight-shared vs separate encoder-denoiser training" loading="lazy" />
+              </div>
+              <h3>Weight sharing yields the best reconstruction–generation trade-off</h3>
+              <p>
+                While a separate encoder–denoiser ablation is competitive, parameter tying yields the best overall rFID / gFID trade-off.
+                Under weight sharing, increasing the number of flow iterations consistently improves generation fidelity — reducing gFID from 3.33 to 2.12 — while maintaining or slightly improving reconstruction, suggesting the latent space becomes more sampleable without sacrificing information.
+              </p>
+            </article>
+
+            <article className="analysis-card reveal">
+              <div className="analysis-frame">
+                <img src="./assets/figures/cka_analysis_final_v3.png" alt="Representation alignment between tokenization and generation" loading="lazy" />
+              </div>
+              <h3>Tokenization and denoising are intrinsically aligned</h3>
+              <p>
+                We measure alignment between tokenization-pathway and denoising-pathway activations using CKA and cosine similarity.
+                <strong> Left:</strong> both the weight-shared and separate encoder–denoiser settings exhibit strong alignment, especially in later layers, indicating that tokenization and denoising are intrinsically aligned tasks.
+                <strong> Middle:</strong> removing the stop-gradient weakens late-layer alignment, even though the denoising objective still matches the final latent target.
+                <strong> Right:</strong> cosine similarity on the final latents decreases at lower denoising timesteps in the no-stop-gradient setting.
+              </p>
+            </article>
+
+            <article className="analysis-card reveal">
+              <div className="analysis-frame">
+                <img src="./assets/figures/denoising_analysis_v3.png" alt="Denoising trajectory analysis" loading="lazy" />
+              </div>
+              <h3>Stop-gradient preserves cleaner denoising trajectories</h3>
+              <p>
+                We encode an image into latents, corrupt the latent with noise, and decode the denoised prediction at different noise levels.
+                Although all four ablations achieve competitive rFID/gFID, the stop-gradient variants (top two rows) exhibit markedly cleaner intermediate denoising, with higher PSNR to the input across all noise levels — consistent with the representation alignment analysis above.
+              </p>
+            </article>
           </div>
         </section>
 

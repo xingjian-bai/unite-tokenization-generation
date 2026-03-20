@@ -844,6 +844,12 @@ button {
   border: none;
 }
 
+.analysis-frame-narrow {
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .analysis-frame img,
 .figure-card img {
   display: block;
