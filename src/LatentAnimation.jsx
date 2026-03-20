@@ -42,7 +42,7 @@ const CFG = {
   trans12: { duration: 1125 },
   phase2: { trajDelay: 4220, trajDur: 2700, decDelay: 270, fadeIn: 600, popDur: 750, popPause: 500, freeze: 1050, popScale: 2.2 },
   trans23: { duration: 1650 },
-  phase3: { hold: 10500, breathMs: 4500 },
+  phase3: { hold: 7000, breathMs: 4500 },
 };
 
 // Pre-compute trajectories
@@ -598,7 +598,7 @@ export default function LatentAnimation() {
           S.t0 = performance.now();
           setPhaseLabel(phases.current[S.phase].label);
         } else if (done) {
-          // Loop
+          // Loop back to Phase 1
           S.phase = 0;
           S.t0 = performance.now();
           setPhaseLabel(phases.current[0].label);
