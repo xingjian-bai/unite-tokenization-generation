@@ -28,12 +28,12 @@ const CFG = {
     { x: 0.48, y: 0.39 },
     { x: 0.54, y: 0.45 },
   ],
-  genAngles: [0.15 * Math.PI, 1.0 * Math.PI, 1.7 * Math.PI],
+  genAngles: [0.15 * Math.PI, 0.85 * Math.PI, 1.42 * Math.PI],
   colors: {
     steelBlue: "#2c6faa",
     iceBue: "#7bb8d9",
     burntOrange: "#c04800",
-    trajGrad: ["#e8780a", "#d46a08", "#c05d06", "#a85004", "#8f4303", "#6b3202"],
+    trajGrad: ["#e8780a", "#c85e06", "#a85004", "#7a3802"],
     gaussian: "#bbb",
     bg: "transparent",
   },
@@ -46,6 +46,7 @@ const CFG = {
 };
 
 // Pre-compute trajectories
+const NUM_SEGMENTS = 4; // 4 segments per trajectory
 function buildTrajectories() {
   const out = [];
   for (let i = 0; i < NUM_ROWS; i++) {
@@ -57,8 +58,8 @@ function buildTrajectories() {
     const mx = (sx + ep.x) / 2 + bo * Math.sin(a);
     const my = (sy + ep.y) / 2 - bo * Math.cos(a);
     const wps = [];
-    for (let t = 0; t <= 1.001; t += 0.2) {
-      const tt = Math.min(t, 1);
+    for (let j = 0; j <= NUM_SEGMENTS; j++) {
+      const tt = j / NUM_SEGMENTS;
       wps.push({
         x: (1 - tt) ** 2 * sx + 2 * (1 - tt) * tt * mx + tt ** 2 * ep.x,
         y: (1 - tt) ** 2 * sy + 2 * (1 - tt) * tt * my + tt ** 2 * ep.y,
@@ -264,19 +265,23 @@ export default function LatentAnimation() {
     ctx.globalAlpha = 1;
   }, []);
 
-  const drawTraj = useCallback((ctx, idx, progress, alpha) => {
+  const drawTraj = useCallback((ctx, idx, progress, alpha, showGE) => {
     const wps = TRAJS[idx];
-    const n = wps.length - 1;
+    const n = wps.length - 1; // NUM_SEGMENTS
     const cur = progress * n;
+    const s = stateRef.current.size;
+    const dotR = 5; // consistent dot radius
+
     for (let j = 0; j < n; j++) {
       if (j > cur) break;
       const sp = Math.min(1, cur - j);
       const ci = Math.min(j, CFG.colors.trajGrad.length - 1);
       const col = CFG.colors.trajGrad[ci];
-      const s = stateRef.current.size;
       const p0x = wps[j].x * s, p0y = wps[j].y * s;
       const p1x = wps[j + 1].x * s, p1y = wps[j + 1].y * s;
       const ex = p0x + (p1x - p0x) * sp, ey = p0y + (p1y - p0y) * sp;
+
+      // Segment line
       ctx.beginPath();
       ctx.moveTo(p0x, p0y);
       ctx.lineTo(ex, ey);
@@ -284,16 +289,42 @@ export default function LatentAnimation() {
       ctx.lineWidth = 2.5;
       ctx.globalAlpha = alpha * 0.7;
       ctx.stroke();
-      // Waypoint dot
-      ctx.beginPath();
-      ctx.arc(p0x, p0y, 4, 0, Math.PI * 2);
-      ctx.fillStyle = col;
-      ctx.globalAlpha = alpha * 0.6;
-      ctx.fill();
-      // Leading dot
-      if (j === Math.floor(cur) && sp < 1) {
+
+      const isActive = j === Math.floor(cur) && sp < 1;
+
+      if (!isActive) {
+        // Completed segment — draw normal waypoint dot
         ctx.beginPath();
-        ctx.arc(ex, ey, 8, 0, Math.PI * 2);
+        ctx.arc(p0x, p0y, dotR, 0, Math.PI * 2);
+        ctx.fillStyle = col;
+        ctx.globalAlpha = alpha * 0.7;
+        ctx.fill();
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+
+      // GE box + endpoint dot at midpoint of completed segments
+      if (showGE && sp >= 1) {
+        const mx = (wps[j].x + wps[j + 1].x) / 2;
+        const my = (wps[j].y + wps[j + 1].y) / 2;
+        drawBox(ctx, "GE", mx, my, CFG.colors.burntOrange, alpha * 0.85);
+        // Endpoint dot appears with its GE, not the next segment's GE
+        const nci = Math.min(j + 1, CFG.colors.trajGrad.length - 1);
+        ctx.beginPath();
+        ctx.arc(wps[j + 1].x * s, wps[j + 1].y * s, dotR, 0, Math.PI * 2);
+        ctx.fillStyle = CFG.colors.trajGrad[nci];
+        ctx.globalAlpha = alpha * 0.7;
+        ctx.fill();
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+
+      // Leading dot — only element at the active position
+      if (isActive) {
+        ctx.beginPath();
+        ctx.arc(ex, ey, dotR + 2, 0, Math.PI * 2);
         ctx.fillStyle = CFG.colors.burntOrange;
         ctx.globalAlpha = alpha;
         ctx.fill();
@@ -302,11 +333,12 @@ export default function LatentAnimation() {
         ctx.stroke();
       }
     }
+
+    // Final waypoint dot when complete
     if (progress >= 1) {
       const last = wps[wps.length - 1];
-      const s = stateRef.current.size;
       ctx.beginPath();
-      ctx.arc(last.x * s, last.y * s, 8, 0, Math.PI * 2);
+      ctx.arc(last.x * s, last.y * s, dotR + 2, 0, Math.PI * 2);
       ctx.fillStyle = CFG.colors.burntOrange;
       ctx.globalAlpha = alpha;
       ctx.fill();
@@ -315,7 +347,7 @@ export default function LatentAnimation() {
       ctx.stroke();
     }
     ctx.globalAlpha = 1;
-  }, []);
+  }, [drawBox]);
 
   // ── Phase runners ────────────────────────────────────────────
   const runP1 = useCallback((ctx, el) => {
@@ -410,6 +442,30 @@ export default function LatentAnimation() {
     const arrowRads = [0.015, 0.0, -0.015];
     const activeIdx = Math.min(NUM_ROWS - 1, Math.floor(el / c.trajDelay));
 
+    // Per-trajectory, per-label offsets for t= labels
+    // Each entry: [waypointIndex, label, dx, dy]
+    // With 4 segments: waypoints 0,1,2,3,4
+    const labelOffsets = [
+      // Traj 0: lower-right → upper-center (labels to the right of trajectory)
+      [
+        [0, "t=1.0", 0.042, 0.012],
+        [2, "t=0.5", 0.042, 0.0],
+        [NUM_SEGMENTS, "t=0.0", 0.042, -0.012],
+      ],
+      // Traj 1: lower-left → center (labels to the left / below)
+      [
+        [0, "t=1.0", -0.042, 0.025],
+        [2, "t=0.5", -0.02, 0.05],
+        [NUM_SEGMENTS, "t=0.0", -0.058, 0.025],
+      ],
+      // Traj 2: upper-left → center (labels to the left / above)
+      [
+        [0, "t=1.0", -0.042, -0.02],
+        [2, "t=0.5", -0.048, 0.005],
+        [NUM_SEGMENTS, "t=0.0", 0.055, 0.035],
+      ],
+    ];
+
     for (let i = 0; i < NUM_ROWS; i++) {
       const ts = i * c.trajDelay;
       const te = el - ts;
@@ -418,58 +474,24 @@ export default function LatentAnimation() {
       const prog = Math.min(1, te / c.trajDur);
       const done = prog >= 1;
 
-      // GE box between waypoints (on the edge, not on a node)
-      const geWpA = TRAJS[i][1]; // between wp1 and wp2
-      const geWpB = TRAJS[i][2];
-      const gePos = { x: (geWpA.x + geWpB.x) / 2, y: (geWpA.y + geWpB.y) / 2 };
-
-      // Per-trajectory, per-label offsets for t= labels
-      // Each entry: [waypointIndex, label, dx, dy]
-      const labelOffsets = [
-        // Traj 0: curves from bottom-right to upper-center
-        [
-          [0, "t=1.0", 0.035, 0.005],
-          [3, "t=0.5", 0.035, -0.015],
-          [5, "t=0.0", 0.035, -0.015],
-        ],
-        // Traj 1: goes from left to center (mostly horizontal)
-        [
-          [0, "t=1.0", -0.035, 0.025],
-          [3, "t=0.5", 0.0, 0.028],
-          [5, "t=0.0", 0.035, 0.012],
-        ],
-        // Traj 2: curves from upper-right down to center
-        [
-          [0, "t=1.0", 0.035, -0.01],
-          [3, "t=0.5", -0.045, 0.01],
-          [5, "t=0.0", 0.035, 0.015],
-        ],
-      ];
-
-      // Completed trajs
+      // Completed trajs — GE boxes drawn inside drawTraj
       if (i < activeIdx) {
-        drawTraj(ctx, i, 1, 0.35);
-        drawBox(ctx, "GE", gePos.x, gePos.y, CFG.colors.burntOrange, 0.35);
+        drawTraj(ctx, i, 1, 0.35, true);
         const da = 0.5;
         drawBox(ctx, "D", L.decoderX, y, CFG.colors.burntOrange, da);
         drawImg(ctx, imgs.current.gen[i], L.rightX, y, L.imgSize, da, CFG.colors.burntOrange);
       } else {
-        // Active traj
-        drawTraj(ctx, i, prog, 0.9);
-
-        // GE box appears when trajectory passes ~30%
-        if (prog >= 0.3) {
-          drawBox(ctx, "GE", gePos.x, gePos.y, CFG.colors.burntOrange, 0.9);
-        }
+        // Active traj — GE boxes appear as segments complete
+        drawTraj(ctx, i, prog, 0.9, true);
 
         // Timestep labels with per-trajectory offsets
         const labels = labelOffsets[i];
         for (let j = 0; j < labels.length; j++) {
           const [wpIdx, text, dx, dy] = labels[j];
-          const wpProg = wpIdx / 5;
+          const wpProg = wpIdx / NUM_SEGMENTS;
           if (prog >= wpProg) {
             const wp = TRAJS[i][wpIdx];
-            drawText(ctx, text, wp.x + dx, wp.y + dy, CFG.colors.burntOrange, 0.85, 0.014, "bold 700");
+            drawText(ctx, text, wp.x + dx, wp.y + dy, CFG.colors.burntOrange, 0.85, 0.017, "700");
           }
         }
 
