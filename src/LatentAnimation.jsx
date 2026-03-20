@@ -398,7 +398,7 @@ export default function LatentAnimation() {
     const L = CFG.layout;
     drawGaussian(ctx, 0.12);
     drawText(ctx, "Phase 2: Generation", 0.5, 0.04, CFG.colors.burntOrange, 1, 0.03, "800");
-    drawText(ctx, "Input", L.leftX, 0.10, "#555", 1, 0.024, "600");
+    drawText(ctx, "Input", L.leftX, 0.10, "#555", 0.35, 0.024, "600");
     drawText(ctx, "Generated", L.rightX, 0.10, CFG.colors.burntOrange, 1, 0.024, "600");
 
     // Dimmed Phase 1
@@ -507,16 +507,20 @@ export default function LatentAnimation() {
 
     for (let i = 0; i < NUM_ROWS; i++) {
       const y = L.rowYs[i];
-      // Fade out P2 positioned images
-      drawImg(ctx, imgs.current.input[i], L.leftX, y, L.imgSize, 0.3 * (1 - t), CFG.colors.steelBlue);
-      drawImg(ctx, imgs.current.gen[i], L.rightX, y, L.imgSize, 0.5 * (1 - t), CFG.colors.burntOrange);
+      // Lerp input position/size from P2 → P3
+      const inX = L.leftX + (P3_LEFT - L.leftX) * t;
+      const inSize = L.imgSize + (P3_IMG - L.imgSize) * t;
+      const inAlpha = 0.3 + (0.9 - 0.3) * t;
+      drawImg(ctx, imgs.current.input[i], inX, y, inSize, inAlpha, CFG.colors.steelBlue);
+      // Lerp gen position/size from P2 → P3
+      const genX = L.rightX + (P3_RIGHT - L.rightX) * t;
+      const genSize = L.imgSize + (P3_IMG - L.imgSize) * t;
+      const genAlpha = 0.5 + (1.0 - 0.5) * t;
+      drawImg(ctx, imgs.current.gen[i], genX, y, genSize, genAlpha, CFG.colors.burntOrange);
       // Keep dots + trajectories
       drawDot(ctx, CFG.blueDots[i].x, CFG.blueDots[i].y, CFG.colors.steelBlue, 0.3 + t * 0.45);
       drawTraj(ctx, i, 1, 0.25 + t * 0.1);
       drawDot(ctx, CFG.genFinal[i].x, CFG.genFinal[i].y, CFG.colors.burntOrange, 0.5 + t * 0.3);
-      // Fade in large recon (left) and gen (right)
-      drawImg(ctx, imgs.current.input[i], P3_LEFT, y, P3_IMG, t * 0.9, CFG.colors.steelBlue);
-      drawImg(ctx, imgs.current.gen[i], P3_RIGHT, y, P3_IMG, t, CFG.colors.burntOrange);
     }
     // Headers
     drawText(ctx, "Reconstructed", P3_LEFT, 0.12, CFG.colors.steelBlue, t * 0.9, 0.022, "600");
