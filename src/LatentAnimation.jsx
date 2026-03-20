@@ -7,7 +7,7 @@ import { useEffect, useRef, useCallback, useState } from "react";
 
 // ── CONFIG ─────────────────────────────────────────────────────
 const NUM_ROWS = 3;
-const ASPECT = 0.82; // height / width ratio (shorter than square)
+const ASPECT = 0.74; // height / width ratio (shorter than square)
 const CFG = {
   layout: {
     leftX: 0.10,
@@ -496,8 +496,8 @@ export default function LatentAnimation() {
     drawText(ctx, "Reconstructed", P3_LEFT, 0.12, CFG.colors.steelBlue, t * 0.9, 0.018, "600");
     drawText(ctx, "Generated", P3_RIGHT, 0.12, CFG.colors.burntOrange, t * 0.9, 0.018, "600");
     // Bottom text
-    drawText(ctx, "Tokenization through one-step encoding and decoding", 0.5, 0.68, CFG.colors.steelBlue, t * 0.9, 0.018, "500");
-    drawText(ctx, "Generation through iterative denoising + decoding", 0.5, 0.72, CFG.colors.burntOrange, t * 0.9, 0.018, "500");
+    drawText(ctx, "Tokenization through one-step encoding and decoding", 0.5, 0.62, CFG.colors.steelBlue, t * 0.9, 0.018, "500");
+    drawText(ctx, "Generation through iterative denoising + decoding", 0.5, 0.66, CFG.colors.burntOrange, t * 0.9, 0.018, "500");
     return el >= dur;
   }, [drawGaussian, drawImg, drawDot, drawText, drawTraj]);
 
@@ -522,8 +522,8 @@ export default function LatentAnimation() {
     drawText(ctx, "Reconstructed", P3_LEFT, 0.12, CFG.colors.steelBlue, 0.9, 0.018, "600");
     drawText(ctx, "Generated", P3_RIGHT, 0.12, CFG.colors.burntOrange, 0.9, 0.018, "600");
     // Bottom text
-    drawText(ctx, "Tokenization through one-step encoding and decoding", 0.5, 0.68, CFG.colors.steelBlue, 0.9, 0.018, "500");
-    drawText(ctx, "Generation through iterative denoising + decoding", 0.5, 0.72, CFG.colors.burntOrange, 0.9, 0.018, "500");
+    drawText(ctx, "Tokenization through one-step encoding and decoding", 0.5, 0.62, CFG.colors.steelBlue, 0.9, 0.018, "500");
+    drawText(ctx, "Generation through iterative denoising + decoding", 0.5, 0.66, CFG.colors.burntOrange, 0.9, 0.018, "500");
     return el >= c.hold;
   }, [drawGaussian, drawImg, drawDot, drawText, drawTraj]);
 
