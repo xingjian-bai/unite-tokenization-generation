@@ -142,16 +142,18 @@ export default function LatentAnimation() {
     const s = stateRef.current.size;
     const cx = s * 0.5, cy = s * 0.38;
     const radii = [0.28, 0.22, 0.17, 0.12, 0.08, 0.05];
-    const as = [0.03, 0.05, 0.07, 0.09, 0.11, 0.13];
+    const strokeAs = [0.06, 0.10, 0.15, 0.22, 0.30, 0.40];
+    const fillAs   = [0.02, 0.04, 0.06, 0.10, 0.15, 0.22];
     for (let i = 0; i < radii.length; i++) {
+      const scale = alpha / 0.12;
       ctx.beginPath();
       ctx.arc(cx, cy, radii[i] * s, 0, Math.PI * 2);
       ctx.strokeStyle = CFG.colors.gaussian;
-      ctx.lineWidth = 1;
-      ctx.globalAlpha = as[i] * (alpha / 0.12);
+      ctx.lineWidth = 1.5;
+      ctx.globalAlpha = strokeAs[i] * scale;
       ctx.stroke();
       ctx.fillStyle = CFG.colors.gaussian;
-      ctx.globalAlpha = as[i] * 0.3 * (alpha / 0.12);
+      ctx.globalAlpha = fillAs[i] * scale;
       ctx.fill();
     }
     ctx.globalAlpha = 1;
