@@ -342,10 +342,11 @@ function App() {
           <div className="loop-panel" id="loop">
             <div className="loop-intro reveal">
               <p className="card-kicker">Training</p>
-              <h3>Two forward passes, one shared encoder</h3>
+              <h3>Two forward passes, one shared Generative Encoder</h3>
               <p className="loop-desc">
-                Pass 1: the Generative Encoder tokenizes an image into latents, which the decoder reconstructs back to pixels.
-                Pass 2: those same latents are noised, and the <em>same</em> Generative Encoder denoises them — learning to generate by denoising its own representations.
+                The Generative Encoder tokenizes an image into clean latent tokens, which the decoder maps back to pixels to compute a <strong>reconstruction loss</strong>.
+                The same latents are then detached and noised, and the <em>same</em> Generative Encoder denoises them to compute a <strong>flow-matching loss</strong>.
+                Both losses update the shared encoder weights, jointly shaping a latent space that serves both tokenization and generation.
               </p>
             </div>
 
