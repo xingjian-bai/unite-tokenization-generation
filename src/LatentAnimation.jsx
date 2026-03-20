@@ -7,25 +7,26 @@ import { useEffect, useRef, useCallback, useState } from "react";
 
 // ── CONFIG ─────────────────────────────────────────────────────
 const NUM_ROWS = 3;
+const ASPECT = 0.82; // height / width ratio (shorter than square)
 const CFG = {
   layout: {
     leftX: 0.10,
     rightX: 0.90,
     encoderX: 0.30,
     decoderX: 0.70,
-    rowYs: [0.26, 0.44, 0.62],
+    rowYs: [0.22, 0.38, 0.54],
     imgSize: 0.14,
     boxHalf: 0.022,
   },
   blueDots: [
-    { x: 0.52, y: 0.37 },
-    { x: 0.47, y: 0.44 },
-    { x: 0.52, y: 0.51 },
+    { x: 0.52, y: 0.32 },
+    { x: 0.47, y: 0.38 },
+    { x: 0.52, y: 0.44 },
   ],
   genFinal: [
-    { x: 0.54, y: 0.38 },
-    { x: 0.48, y: 0.45 },
-    { x: 0.54, y: 0.52 },
+    { x: 0.54, y: 0.33 },
+    { x: 0.48, y: 0.39 },
+    { x: 0.54, y: 0.45 },
   ],
   genAngles: [0.15 * Math.PI, 1.0 * Math.PI, 1.7 * Math.PI],
   colors: {
@@ -118,14 +119,15 @@ export default function LatentAnimation() {
       const el = containerRef.current;
       if (!el) return;
       const rect = el.getBoundingClientRect();
-      const s = Math.min(rect.width, rect.height);
-      stateRef.current.size = s;
+      const w = rect.width;
+      stateRef.current.size = w;
       const c = canvasRef.current;
       if (c) {
-        c.width = s * window.devicePixelRatio;
-        c.height = s * window.devicePixelRatio;
-        c.style.width = s + "px";
-        c.style.height = s + "px";
+        const dpr = window.devicePixelRatio;
+        c.width = w * dpr;
+        c.height = w * ASPECT * dpr;
+        c.style.width = w + "px";
+        c.style.height = (w * ASPECT) + "px";
       }
     }
     onResize();
@@ -138,7 +140,7 @@ export default function LatentAnimation() {
 
   const drawGaussian = useCallback((ctx, alpha) => {
     const s = stateRef.current.size;
-    const cx = s * 0.5, cy = s * 0.45;
+    const cx = s * 0.5, cy = s * 0.38;
     const radii = [0.28, 0.22, 0.17, 0.12, 0.08, 0.05];
     const as = [0.03, 0.05, 0.07, 0.09, 0.11, 0.13];
     for (let i = 0; i < radii.length; i++) {
@@ -475,7 +477,7 @@ export default function LatentAnimation() {
 
     // Fade out P2 title, fade in UNITE title
     drawText(ctx, "Phase 2: Generation", 0.5, 0.04, CFG.colors.burntOrange, 1 - t, 0.03, "800");
-    drawText(ctx, "UNITE: A Shared Latent Language", 0.5, 0.06, "#1a1a1a", t, 0.028, "700");
+    drawText(ctx, "A Shared Latent Language for Tokenization and Generation", 0.5, 0.06, "#1a1a1a", t, 0.022, "700");
 
     for (let i = 0; i < NUM_ROWS; i++) {
       const y = L.rowYs[i];
@@ -491,11 +493,11 @@ export default function LatentAnimation() {
       drawImg(ctx, imgs.current.gen[i], P3_RIGHT, y, P3_IMG, t, CFG.colors.burntOrange);
     }
     // Headers
-    drawText(ctx, "Reconstructed", P3_LEFT, 0.16, CFG.colors.steelBlue, t * 0.9, 0.018, "600");
-    drawText(ctx, "Generated", P3_RIGHT, 0.16, CFG.colors.burntOrange, t * 0.9, 0.018, "600");
+    drawText(ctx, "Reconstructed", P3_LEFT, 0.12, CFG.colors.steelBlue, t * 0.9, 0.018, "600");
+    drawText(ctx, "Generated", P3_RIGHT, 0.12, CFG.colors.burntOrange, t * 0.9, 0.018, "600");
     // Bottom text
-    drawText(ctx, "Tokenization through one-step encoding and decoding", 0.5, 0.80, CFG.colors.steelBlue, t * 0.9, 0.018, "500");
-    drawText(ctx, "Generation through iterative denoising + decoding", 0.5, 0.845, CFG.colors.burntOrange, t * 0.9, 0.018, "500");
+    drawText(ctx, "Tokenization through one-step encoding and decoding", 0.5, 0.68, CFG.colors.steelBlue, t * 0.9, 0.018, "500");
+    drawText(ctx, "Generation through iterative denoising + decoding", 0.5, 0.72, CFG.colors.burntOrange, t * 0.9, 0.018, "500");
     return el >= dur;
   }, [drawGaussian, drawImg, drawDot, drawText, drawTraj]);
 
@@ -516,12 +518,12 @@ export default function LatentAnimation() {
       drawImg(ctx, imgs.current.gen[i], P3_RIGHT, y, P3_IMG, 1, CFG.colors.burntOrange);
     }
     // Top title
-    drawText(ctx, "UNITE: A Shared Latent Language", 0.5, 0.06, "#1a1a1a", 1, 0.028, "700");
-    drawText(ctx, "Reconstructed", P3_LEFT, 0.16, CFG.colors.steelBlue, 0.9, 0.018, "600");
-    drawText(ctx, "Generated", P3_RIGHT, 0.16, CFG.colors.burntOrange, 0.9, 0.018, "600");
+    drawText(ctx, "A Shared Latent Language for Tokenization and Generation", 0.5, 0.06, "#1a1a1a", 1, 0.022, "700");
+    drawText(ctx, "Reconstructed", P3_LEFT, 0.12, CFG.colors.steelBlue, 0.9, 0.018, "600");
+    drawText(ctx, "Generated", P3_RIGHT, 0.12, CFG.colors.burntOrange, 0.9, 0.018, "600");
     // Bottom text
-    drawText(ctx, "Tokenization through one-step encoding and decoding", 0.5, 0.80, CFG.colors.steelBlue, 0.9, 0.018, "500");
-    drawText(ctx, "Generation through iterative denoising + decoding", 0.5, 0.845, CFG.colors.burntOrange, 0.9, 0.018, "500");
+    drawText(ctx, "Tokenization through one-step encoding and decoding", 0.5, 0.68, CFG.colors.steelBlue, 0.9, 0.018, "500");
+    drawText(ctx, "Generation through iterative denoising + decoding", 0.5, 0.72, CFG.colors.burntOrange, 0.9, 0.018, "500");
     return el >= c.hold;
   }, [drawGaussian, drawImg, drawDot, drawText, drawTraj]);
 
@@ -604,7 +606,7 @@ export default function LatentAnimation() {
         position: "relative",
         width: "100%",
         maxWidth: 700,
-        aspectRatio: "1",
+        aspectRatio: `1 / ${ASPECT}`,
         margin: "0 auto",
         background: "rgba(248,246,241,0.5)",
         borderRadius: 24,

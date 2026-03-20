@@ -320,7 +320,7 @@ function App() {
               We propose <strong>UNITE</strong> — an architecture for <em>unified tokenization and latent diffusion</em>.
               A single <strong>Generative Encoder</strong> serves as both image tokenizer and latent generator
               via weight sharing, trained in a single stage that jointly optimizes both tasks.
-              UNITE learns a <em>common latent language</em> for reconstruction and generation.
+              UNITE learns a <em>common latent language</em> for tokenization and generation.
             </p>
           </div>
 
