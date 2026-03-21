@@ -413,6 +413,13 @@ export default function TrainingComparison() {
 
   return (
     <div className="tc-wrap">
+      <div className="tc-controls">
+        <button className={stage === 1 ? "tc-btn tc-btn-active-1" : "tc-btn"} onClick={goStage1}>Stage 1</button>
+        <button className={stage === 2 ? "tc-btn tc-btn-active-2" : "tc-btn"} onClick={goStage2}>Stage 2</button>
+        <div style={{ width: 16 }} />
+        <button className={stage === 3 ? "tc-btn tc-btn-active-3" : "tc-btn tc-btn-unite"} onClick={goStage3}>UNITE</button>
+      </div>
+
       <div className={`tc-badge tc-badge-${stage}`}>
         <span className="tc-dot" />
         <span>{stageInfo[stage].badge}</span>
@@ -430,13 +437,6 @@ export default function TrainingComparison() {
       <canvas ref={canvasRef} width={CW} height={CH} className="tc-canvas" />
 
       <p className="tc-desc">{stageInfo[stage].desc}</p>
-
-      <div className="tc-controls">
-        <button className={stage === 1 ? "tc-btn tc-btn-active-1" : "tc-btn"} onClick={goStage1}>Stage 1</button>
-        <button className={stage === 2 ? "tc-btn tc-btn-active-2" : "tc-btn"} onClick={goStage2}>Stage 2</button>
-        <div style={{ width: 16 }} />
-        <button className={stage === 3 ? "tc-btn tc-btn-active-3" : "tc-btn tc-btn-hi"} onClick={goStage3}>UNITE</button>
-      </div>
     </div>
   );
 }

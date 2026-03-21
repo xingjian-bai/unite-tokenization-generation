@@ -982,8 +982,8 @@ button {
   transition: all 0.2s;
 }
 .tc-btn:hover { border-color: #3b82f6; color: #3b82f6; background: #eef4ff; }
-.tc-btn-hi { border-color: #d97706; color: #b45309; background: #fef9e7; }
-.tc-btn-hi:hover { border-color: #b45309; background: #fef3c7; }
+.tc-btn-unite { border-color: #d97706; color: #fff; background: #d97706; font-weight: 600; }
+.tc-btn-unite:hover { border-color: #b45309; color: #fff; background: #b45309; }
 .tc-btn-active-1 { border-color: #3b82f6; color: #2563eb; background: #eef4ff; font-weight: 600; }
 .tc-btn-active-2 { border-color: #8b5cf6; color: #7c3aed; background: #f3eeff; font-weight: 600; }
 .tc-btn-active-3 { border-color: #d97706; color: #b45309; background: #fef9e7; font-weight: 600; }
