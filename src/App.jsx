@@ -44,7 +44,7 @@ const loopSteps = [
 const statCards = [
   { label: "Training", value: "Single-stage", note: "one loop" },
   { label: "Teacher", value: "None", note: "no DINO" },
-  { label: "ImageNet FID", value: "2.27", note: "UNITE-B" },
+  { label: "ImageNet FID", value: "2.12", note: "UNITE-B" },
   { label: "Reconstruction", value: "1.01", note: "rFID" },
 ];
 
