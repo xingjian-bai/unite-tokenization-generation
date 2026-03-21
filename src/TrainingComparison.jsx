@@ -135,9 +135,10 @@ export default function TrainingComparison() {
   const initTrajs = useCallback(() => {
     const s = stateRef.current;
     s.trajs = [];
+    const TRAJ_SIG_X = 130, TRAJ_SIG_Y = 90; // tighter than background to show Gaussian shape
     for (let i = 0; i < N_TRAJ; i++) {
-      const sx = clamp(GCX + randn() * SIG_X, 15, CW - 15);
-      const sy = clamp(GCY + randn() * SIG_Y, 15, CH - 15);
+      const sx = clamp(GCX + randn() * TRAJ_SIG_X, 15, CW - 15);
+      const sy = clamp(GCY + randn() * TRAJ_SIG_Y, 15, CH - 15);
       const ni = nearestPt(s.pts, sx, sy);
       s.trajs.push({
         sx, sy,
@@ -229,7 +230,7 @@ export default function TrainingComparison() {
           cx.setLineDash([]);
         });
         if (fi > 0.6) {
-          cx.fillStyle = `rgba(140,70,210,${0.35 * fi})`; cx.font = "9px monospace";
+          cx.fillStyle = `rgba(140,70,210,${0.40 * fi})`; cx.font = "italic 11px -apple-system, sans-serif";
           cx.fillText("\u03C3", GCX + SIG_X + 4, GCY + 4); cx.fillText("2\u03C3", GCX + SIG_X * 2 + 4, GCY + 4);
         }
         s.gaussDots.forEach(d => {
@@ -296,19 +297,19 @@ export default function TrainingComparison() {
       });
 
       // ── HUD: title ──
-      const titleColor = s.stage === 3 ? "rgba(160,100,5,.7)" : "#8899aa";
+      const titleColor = s.stage === 3 ? "rgba(140,90,5,.65)" : "#8899aa";
       const titleText = s.stage === 1 ? "Latent Space" : s.stage === 2 ? "Latent Space" : "UNITE \u2014 Joint Training";
-      cx.fillStyle = titleColor; cx.font = "bold 11px monospace"; cx.fillText(titleText, 12, 16);
+      cx.fillStyle = titleColor; cx.font = "600 12px -apple-system, sans-serif"; cx.fillText(titleText, 12, 18);
 
       // ── HUD: loss panel (bottom-left) ──
       if (s.stage === 1) {
         const lp = easeIO(clamp(s.frame / S1_FRAMES, 0, 1));
         const loss = 2.8 * (1 - easeIO(lp)) + 0.06;
-        drawLossPanel(cx, 12, CH - 52, 170, 40, "\u2112\u2091\u2091\u1d58\u2099 (recon)", loss, [59, 130, 246], lp);
+        drawLossPanel(cx, 12, CH - 52, 170, 40, "Recon Loss", loss, [59, 130, 246], lp);
       } else if (s.stage === 2) {
         const lp = clamp(s.frame / 600, 0, 1);
         const loss = 2.4 * (1 - easeIO(lp)) + 0.08;
-        drawLossPanel(cx, 12, CH - 52, 170, 40, "\u2112flow (denoise)", loss, [140, 70, 210], lp);
+        drawLossPanel(cx, 12, CH - 52, 170, 40, "Flow Loss", loss, [140, 70, 210], lp);
       } else {
         const lp = easeIO(clamp(s.frame / S3_FRAMES, 0, 1));
         const lossR = 2.8 * (1 - easeIO(lp)) + 0.06;
@@ -330,54 +331,60 @@ export default function TrainingComparison() {
   // ── draw a loss panel ──
   function drawLossPanel(cx, x, y, w, h, label, value, color, progress) {
     roundRect(cx, x, y, w, h, 5);
-    cx.fillStyle = "rgba(255,255,255,0.88)"; cx.fill();
-    cx.strokeStyle = `rgba(${color[0]},${color[1]},${color[2]},0.2)`; cx.lineWidth = 1; cx.stroke();
-    cx.fillStyle = "#6b7b8d"; cx.font = "9px monospace"; cx.fillText(label, x + 8, y + 14);
-    cx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`; cx.font = "bold 13px monospace";
-    cx.fillText(value.toFixed(4), x + 8, y + 30);
+    cx.fillStyle = "rgba(255,255,255,0.90)"; cx.fill();
+    cx.strokeStyle = `rgba(${color[0]},${color[1]},${color[2]},0.25)`; cx.lineWidth = 1; cx.stroke();
+    cx.fillStyle = "#5a6a7a"; cx.font = "500 11px -apple-system, sans-serif";
+    cx.fillText(label, x + 10, y + 16);
+    cx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`; cx.font = "bold 14px -apple-system, sans-serif";
+    cx.fillText(value.toFixed(4), x + 10, y + 32);
     // progress bar
-    cx.fillStyle = "#e8ecf1"; cx.fillRect(x + 8, y + h - 5, w - 16, 2);
+    cx.fillStyle = "#e8ecf1"; cx.fillRect(x + 10, y + h - 5, w - 20, 2);
     cx.fillStyle = `rgba(${color[0]},${color[1]},${color[2]},${0.4 + progress * 0.6})`;
-    cx.fillRect(x + 8, y + h - 5, (w - 16) * clamp(progress, 0, 1), 2);
+    cx.fillRect(x + 10, y + h - 5, (w - 20) * clamp(progress, 0, 1), 2);
   }
 
   // ── draw legend ──
   function drawLegend(cx, stage) {
-    const lx = CW - 195, ly = CH - 52;
-    const lw = 183, lh = stage >= 2 ? 42 : 26;
-    roundRect(cx, lx, ly + (stage >= 2 ? 0 : 16), lw, lh, 5);
-    cx.fillStyle = "rgba(255,255,255,0.88)"; cx.fill();
+    const lx = CW - 205, ly = CH - 58;
+    const lw = 193, lh = stage >= 2 ? 48 : 30;
+    const boxY = stage >= 2 ? ly : ly + 18;
+    roundRect(cx, lx, boxY, lw, lh, 5);
+    cx.fillStyle = "rgba(255,255,255,0.90)"; cx.fill();
     cx.strokeStyle = "#d0d8e0"; cx.lineWidth = 1; cx.stroke();
 
+    const font = "11px -apple-system, sans-serif";
+    cx.font = font;
+
     if (stage === 1) {
-      glowDot(cx, lx + 14, ly + 29, 3.5, C_BLUE, 8, 0.9);
-      cx.fillStyle = "#556677"; cx.font = "10px monospace";
-      cx.fillText("image embedding  z\u2080", lx + 26, ly + 33);
+      glowDot(cx, lx + 15, boxY + 15, 3.5, C_BLUE, 8, 0.9);
+      cx.fillStyle = "#4a5a6a";
+      cx.fillText("image embedding", lx + 28, boxY + 19);
     } else {
-      glowDot(cx, lx + 14, ly + 14, 3.5, C_BLUE, 8, 0.9);
-      cx.fillStyle = "#556677"; cx.font = "10px monospace";
-      const blueLabel = stage === 2 ? "image embedding (frozen)" : "image embedding (training)";
-      cx.fillText(blueLabel, lx + 26, ly + 18);
-      glowDot(cx, lx + 14, ly + 34, 2.5, C_ORANGE, 6, 0.9);
-      cx.fillText("Gaussian prior  \uD835\uDCA9(0,I)", lx + 26, ly + 38);
+      const blueLabel = stage === 2 ? "image embedding (frozen)" : "image embedding (learnable)";
+      glowDot(cx, lx + 15, boxY + 14, 3.5, C_BLUE, 8, 0.9);
+      cx.fillStyle = "#4a5a6a";
+      cx.fillText(blueLabel, lx + 28, boxY + 18);
+      glowDot(cx, lx + 15, boxY + 34, 2.8, C_ORANGE, 7, 0.9);
+      cx.fillStyle = "#4a5a6a";
+      cx.fillText("Gaussian prior", lx + 28, boxY + 38);
     }
   }
 
   // ── pipeline node labels ──
   const pipeLabels = {
     1: {
-      row1: ["Image", "\u2192", "GE", "\u2192", "z\u2080", "\u2192", "Decoder", "\u2192", "x\u0302", "|", "\u2112recon"],
+      row1: ["Image", "\u2192", "GE", "\u2192", "z\u2080", "\u2192", "Decoder", "\u2192", "x\u0302", "|", "Lrecon"],
       row2: ["\uD835\uDCA9(0,I)", "\u2192", "Denoiser", "\u2192", "z\u209C", "\u27F6", "z\u2080"],
       row1Active: true, row2Active: false,
     },
     2: {
       row1: ["Image", "\u2192", "GE", "\u2192", "z\u2080", "\u2192", "Decoder", "\u2192", "x\u0302"],
-      row2: ["\uD835\uDCA9(0,I)", "\u2192", "Denoiser", "\u2192", "z\u209C", "\u27F6", "z\u2080", "|", "\u2112flow"],
+      row2: ["\uD835\uDCA9(0,I)", "\u2192", "Denoiser", "\u2192", "z\u209C", "\u27F6", "z\u2080", "|", "Lflow"],
       row1Active: false, row2Active: true,
     },
     3: {
-      row1: ["Image", "\u2192", "GE", "\u2192", "z\u2080", "\u2192", "Decoder", "\u2192", "x\u0302", "|", "\u2112recon"],
-      row2: ["\uD835\uDCA9(0,I)", "\u2192", "GE", "\u2192", "z\u209C", "\u27F6", "z\u2080", "|", "\u2112flow"],
+      row1: ["Image", "\u2192", "GE", "\u2192", "z\u2080", "\u2192", "Decoder", "\u2192", "x\u0302", "|", "Lrecon"],
+      row2: ["\uD835\uDCA9(0,I)", "\u2192", "GE", "\u2192", "z\u209C", "\u27F6", "z\u2080", "|", "Lflow"],
       row1Active: true, row2Active: true,
     },
   };

@@ -947,7 +947,7 @@ button {
 .tc-arr-on { color: #64748b; }
 .tc-arr-gold { color: #b45309; }
 .tc-pipe-sep { color: #d1d5db; padding: 0 4px; font-size: 0.8rem; }
-.tc-node-loss { font-size: 0.72rem; font-style: italic; border: 1px dashed; padding: 3px 8px; }
+.tc-node-loss { font-size: 0.75rem; font-style: italic; font-weight: 500; border: 1px dashed; padding: 3px 8px; }
 .tc-node-loss-blue { color: #3b82f6; border-color: rgba(59,130,246,0.3); background: #eef4ff; }
 .tc-node-loss-purp { color: #7c3aed; border-color: rgba(124,58,237,0.3); background: #f3eeff; }
 .tc-node-loss-gold { color: #b45309; border-color: rgba(180,83,9,0.3); background: #fef9e7; }
