@@ -135,7 +135,7 @@ export default function TrainingComparison() {
   const initTrajs = useCallback(() => {
     const s = stateRef.current;
     s.trajs = [];
-    const TRAJ_SIG_X = 130, TRAJ_SIG_Y = 90; // tighter than background to show Gaussian shape
+    const TRAJ_SIG_X = 85, TRAJ_SIG_Y = 60; // tight Gaussian for visible center concentration
     for (let i = 0; i < N_TRAJ; i++) {
       const sx = clamp(GCX + randn() * TRAJ_SIG_X, 15, CW - 15);
       const sy = clamp(GCY + randn() * TRAJ_SIG_Y, 15, CH - 15);
@@ -373,18 +373,18 @@ export default function TrainingComparison() {
   // ── pipeline node labels ──
   const pipeLabels = {
     1: {
-      row1: ["Image", "\u2192", "GE", "\u2192", "z\u2080", "\u2192", "Decoder", "\u2192", "x\u0302", "|", "Lrecon"],
+      row1: ["Image", "\u2192", "GE", "\u2192", "z\u2080", "\u2192", "Decoder", "\u2192", "x\u0302", "|", "L_recon"],
       row2: ["\uD835\uDCA9(0,I)", "\u2192", "Denoiser", "\u2192", "z\u209C", "\u27F6", "z\u2080"],
       row1Active: true, row2Active: false,
     },
     2: {
       row1: ["Image", "\u2192", "GE", "\u2192", "z\u2080", "\u2192", "Decoder", "\u2192", "x\u0302"],
-      row2: ["\uD835\uDCA9(0,I)", "\u2192", "Denoiser", "\u2192", "z\u209C", "\u27F6", "z\u2080", "|", "Lflow"],
+      row2: ["\uD835\uDCA9(0,I)", "\u2192", "Denoiser", "\u2192", "z\u209C", "\u27F6", "z\u2080", "|", "L_flow"],
       row1Active: false, row2Active: true,
     },
     3: {
-      row1: ["Image", "\u2192", "GE", "\u2192", "z\u2080", "\u2192", "Decoder", "\u2192", "x\u0302", "|", "Lrecon"],
-      row2: ["\uD835\uDCA9(0,I)", "\u2192", "GE", "\u2192", "z\u209C", "\u27F6", "z\u2080", "|", "Lflow"],
+      row1: ["Image", "\u2192", "GE", "\u2192", "z\u2080", "\u2192", "Decoder", "\u2192", "x\u0302", "|", "L_recon"],
+      row2: ["\uD835\uDCA9(0,I)", "\u2192", "GE", "\u2192", "z\u209C", "\u27F6", "z\u2080", "|", "L_flow"],
       row1Active: true, row2Active: true,
     },
   };
