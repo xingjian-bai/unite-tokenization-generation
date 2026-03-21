@@ -430,6 +430,7 @@ function App() {
 
           <div className="analysis-grid">
             <article className="analysis-card reveal">
+              <hr className="analysis-divider" />
               <h3>Weight sharing yields the best reconstruction–generation trade-off</h3>
               <p>
                 While a separate encoder–denoiser ablation is competitive, parameter tying yields the best overall rFID / gFID trade-off.
@@ -440,9 +441,8 @@ function App() {
               </div>
             </article>
 
-            <hr className="analysis-divider" />
-
             <article className="analysis-card reveal">
+              <hr className="analysis-divider" />
               <h3>Tokenization and denoising are intrinsically aligned</h3>
               <p>
                 We measure alignment between tokenization and denoising activations using CKA and cosine similarity. Given an input image, we first record intermediate activations along the tokenization pathway, then corrupt the encoded latent and record the corresponding denoising-pathway activations.
@@ -453,9 +453,8 @@ function App() {
               </div>
             </article>
 
-            <hr className="analysis-divider" />
-
             <article className="analysis-card reveal">
+              <hr className="analysis-divider" />
               <h3>Backpropagating denoising gradients through to the encoder</h3>
               <p>
                 In UNITE, we stop denoising gradients from flowing through the clean latent into the tokenization pathway. After the tokenization pass produces z₀ = GE(x), we apply stop-gradient before constructing the noised latent z_t used in the denoising pass. As a result, the flow-matching objective updates GE only through the second (denoising) forward pass, rather than also directly shaping tokenization through gradients flowing into z₀.
@@ -468,9 +467,8 @@ function App() {
               </p>
             </article>
 
-            <hr className="analysis-divider" />
-
             <article className="analysis-card reveal">
+              <hr className="analysis-divider" />
               <h3>Backpropagating denoising hurts representation alignment</h3>
               <p>
                 As shown in the alignment figure above:
@@ -479,9 +477,8 @@ function App() {
               </p>
             </article>
 
-            <hr className="analysis-divider" />
-
             <article className="analysis-card reveal">
+              <hr className="analysis-divider" />
               <h3>Stop-gradient preserves cleaner denoising trajectories</h3>
               <p>
                 We encode an image into latents, corrupt the latent with noise, and decode the denoised prediction at different noise levels.
