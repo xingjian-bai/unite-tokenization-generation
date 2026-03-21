@@ -50,13 +50,15 @@ const statCards = [
 
 const generationRows = [
   { method: "JiT-B/16", pipeline: "single-stage", params: "131M", fid: "3.66", is: "275.1", section: "Single-stage" },
-  { method: "UNITE-B (Ours)", pipeline: "single-stage", params: "131M+86M", fid: "2.12", is: "294.1", ours: true },
+  { method: "UNITE-B (Ours)", pipeline: "single-stage", params: "217M", fid: "2.12", is: "294.1", ours: true },
   { method: "JiT-L/16", pipeline: "single-stage", params: "459M", fid: "2.36", is: "298.5" },
-  { method: "UNITE-L (Ours)", pipeline: "single-stage", params: "461M+86M", fid: "1.73", is: "296.0", ours: true },
+  { method: "UNITE-L (Ours)", pipeline: "single-stage", params: "589M", fid: "1.73", is: "296.0", ours: true },
   { method: "PixelFlow-XL/4", pipeline: "single-stage", params: "677M", fid: "1.98", is: "282.1" },
+  { method: "PixNerd-XL/16", pipeline: "single-stage", params: "700M", fid: "2.15", is: "297" },
+  { method: "UNITE-XL (Ours)", pipeline: "single-stage", params: "806M", fid: "1.75", is: "309.9", ours: true },
   { method: "JiT-H/16", pipeline: "single-stage", params: "953M", fid: "1.86", is: "303.4" },
+  { method: "SiD", pipeline: "single-stage", params: "2B", fid: "2.44", is: "256.3" },
   { method: "JiT-G/16", pipeline: "single-stage", params: "2B", fid: "1.82", is: "292.6" },
-  { method: "UNITE-XL (Ours)", pipeline: "single-stage", params: "678M+86M", fid: "1.75", is: "309.9", ours: true },
   { method: "DiT-XL/2", pipeline: "two-stage", params: "675M+49M", fid: "2.27", is: "278.2", section: "Two-stage", dimmed: true },
   { method: "SiT-XL/2", pipeline: "two-stage", params: "675M+49M", fid: "2.06", is: "277.5", dimmed: true },
   { method: "REPA-SiT-XL/2", pipeline: "two-stage + DINOv2", params: "675M+49M", fid: "1.42", is: "305.7", section: "Two-stage + DINOv2", dimmed: true },
@@ -138,9 +140,11 @@ function GenerationTable() {
                 <span className="cell" data-label="Pipeline">
                   {row.pipeline}
                 </span>
-                <strong className="cell cell-strong" data-label="FID ↓">
-                  {row.fid}
-                </strong>
+                {row.ours ? (
+                  <strong className="cell cell-strong" data-label="FID ↓">{row.fid}</strong>
+                ) : (
+                  <span className="cell" data-label="FID ↓">{row.fid}</span>
+                )}
                 <span className="cell" data-label="IS ↑">
                   {row.is}
                 </span>
@@ -175,9 +179,11 @@ function ReconstructionTable() {
               <span className="cell" data-label="Setup">
                 {row.setup}
               </span>
-              <strong className="cell cell-strong" data-label="rFID ↓">
-                {row.rfid}
-              </strong>
+              {row.ours ? (
+                <strong className="cell cell-strong" data-label="rFID ↓">{row.rfid}</strong>
+              ) : (
+                <span className="cell" data-label="rFID ↓">{row.rfid}</span>
+              )}
             </div>
           ))}
         </div>
