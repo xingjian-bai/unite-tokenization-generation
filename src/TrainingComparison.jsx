@@ -144,15 +144,11 @@ export default function TrainingComparison() {
       const sx = clamp(GCX + randn() * SIG_X, 15, CW - 15);
       const sy = clamp(GCY + randn() * SIG_Y, 15, CH - 15);
       const ni = nearestPt(s.pts, sx, sy);
-      const tgt = s.pts[ni];
-      // Precompute control points based on start → final target (stable, won't flip)
-      const off1 = rnd(-55, 55), off2 = rnd(-55, 55);
-      const { cp1x, cp1y, cp2x, cp2y } = getCP(sx, sy, tgt.z0x, tgt.z0y, off1, off2);
       s.trajs.push({
         sx, sy,
         ex: rnd(40, CW - 40), ey: rnd(40, CH - 40),
         targetIdx: ni,
-        cp1x, cp1y, cp2x, cp2y, // locked control points
+        off1: rnd(-55, 55), off2: rnd(-55, 55),
         lerpSpd: rnd(0.013, 0.024),
       });
     }
@@ -182,11 +178,6 @@ export default function TrainingComparison() {
       Object.assign(p, ns);
     });
     initTrajs();
-    // Lock each trajectory's final target to the nearest blue dot at its FINAL position
-    // This prevents late target-switching as blue dots move
-    s.trajs.forEach(tr => {
-      tr.lockedTarget = nearestPt(s.pts.map(p => ({ x: p.z0x, y: p.z0y })), tr.sx, tr.sy);
-    });
     setStage(3);
   }, [initTrajs]);
 
@@ -230,13 +221,14 @@ export default function TrainingComparison() {
         // Blue dots: ease-out but gentler (easeO2 not easeO3)
         const tPts = easeO2(clamp(s.frame / S3_FRAMES, 0, 1));
         s.pts.forEach(p => { const pos = qbez(p.sx, p.sy, p.cpx, p.cpy, p.z0x, p.z0y, tPts); p.x = pos.x; p.y = pos.y; });
-        // Orange trajectories: smooth ramp, follows blue more closely
+        // Orange trajectories: RBF-weighted target, smooth anneal
         const anneal = smoothRamp(clamp(s.frame / S3_FRAMES, 0, 1));
+        const sigma = lerp(220, 30, anneal);
         const spd3 = 0.005 + anneal * 0.035;
         s.trajs.forEach(tr => {
-          const tgt = s.pts[tr.lockedTarget !== undefined ? tr.lockedTarget : tr.targetIdx];
-          tr.ex = lerp(tr.ex, tgt.x, spd3);
-          tr.ey = lerp(tr.ey, tgt.y, spd3);
+          const [tx, ty] = rbfTarget(s.pts, tr.sx, tr.sy, sigma);
+          tr.ex = lerp(tr.ex, tx, spd3);
+          tr.ey = lerp(tr.ey, ty, spd3);
         });
       }
 
@@ -275,7 +267,8 @@ export default function TrainingComparison() {
         const fi = clamp(s.frame / 50, 0, 1);
         const SEG = 24;
         s.trajs.forEach(tr => {
-          const { sx, sy, ex, ey, cp1x, cp1y, cp2x, cp2y } = tr;
+          const { sx, sy, ex, ey, off1, off2 } = tr;
+          const { cp1x, cp1y, cp2x, cp2y } = getCP(sx, sy, ex, ey, off1, off2);
           for (let i = 0; i < SEG - 1; i++) {
             const t1 = i / (SEG - 1), t2 = (i + 1) / (SEG - 1);
             const pp1 = cbez(sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey, t1);
@@ -445,7 +438,7 @@ export default function TrainingComparison() {
       </div>
 
       <div className="tc-pipeline">
-        <div className="tc-pipeline-rows" ref={pipelineRef}>
+        <div className={`tc-pipeline-rows ${isJoint ? "tc-rows-joint" : ""}`} ref={pipelineRef}>
           <div className={`tc-prow ${!pipe.row1Active && !isJoint ? "tc-prow-dim" : ""} ${isJoint ? "tc-prow-gold tc-prow-offset-r" : ""}`}>
             {pipe.row1.map((label, i) => renderPipeNode(label, i, pipe.row1Active, isJoint, 0))}
           </div>

@@ -935,6 +935,9 @@ button {
 .tc-prow-offset-r {
   transform: translateX(165px);
 }
+.tc-rows-joint {
+  transform: translateX(-82px);
+}
 .tc-prow {
   display: flex;
   align-items: center;
