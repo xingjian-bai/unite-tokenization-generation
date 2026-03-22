@@ -137,10 +137,9 @@ export default function TrainingComparison() {
   const initTrajs = useCallback(() => {
     const s = stateRef.current;
     s.trajs = [];
-    const TRAJ_SIG_X = 85, TRAJ_SIG_Y = 60; // tight Gaussian for visible center concentration
     for (let i = 0; i < N_TRAJ; i++) {
-      const sx = clamp(GCX + randn() * TRAJ_SIG_X, 15, CW - 15);
-      const sy = clamp(GCY + randn() * TRAJ_SIG_Y, 15, CH - 15);
+      const sx = rnd(25, CW - 25);
+      const sy = rnd(25, CH - 25);
       const ni = nearestPt(s.pts, sx, sy);
       s.trajs.push({
         sx, sy,
@@ -237,15 +236,6 @@ export default function TrainingComparison() {
         bg.addColorStop(0.6, `rgba(140,70,210,${0.03 * fi})`);
         bg.addColorStop(1, `rgba(140,70,210,0)`);
         cx.fillStyle = bg; cx.fillRect(0, 0, CW, CH);
-        [[2, 0.10], [1, 0.18]].forEach(([sig, a]) => {
-          cx.strokeStyle = `rgba(140,70,210,${a * fi})`; cx.lineWidth = 1; cx.setLineDash([4, 5]);
-          cx.beginPath(); cx.ellipse(GCX, GCY, SIG_X * sig, SIG_Y * sig, 0, 0, Math.PI * 2); cx.stroke();
-          cx.setLineDash([]);
-        });
-        if (fi > 0.6) {
-          cx.fillStyle = `rgba(140,70,210,${0.40 * fi})`; cx.font = "italic 11px -apple-system, sans-serif";
-          cx.fillText("\u03C3", GCX + SIG_X + 4, GCY + 4); cx.fillText("2\u03C3", GCX + SIG_X * 2 + 4, GCY + 4);
-        }
         s.gaussDots.forEach(d => {
           const b = 0.6 + 0.4 * Math.sin(s.frame * 0.018 + d.ph);
           cx.globalAlpha = d.a * fi * b;
