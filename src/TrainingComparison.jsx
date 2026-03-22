@@ -145,10 +145,15 @@ export default function TrainingComparison() {
       const sx = clamp(GCX + randn() * SIG_X, 15, CW - 15);
       const sy = clamp(GCY + randn() * SIG_Y, 15, CH - 15);
       const ni = nearestPt(s.pts, sx, sy);
+      // Small random offset from blue dot — represents a distribution, not exact reconstruction
+      const angle = rnd(0, Math.PI * 2);
+      const radius = rnd(3, 15);
       s.trajs.push({
         sx, sy,
         ex: rnd(40, CW - 40), ey: rnd(40, CH - 40),
         targetIdx: ni,
+        tgtOffX: Math.cos(angle) * radius,
+        tgtOffY: Math.sin(angle) * radius,
         off1: rnd(-55, 55), off2: rnd(-55, 55),
         lerpSpd: rnd(0.013, 0.024),
       });
@@ -216,11 +221,10 @@ export default function TrainingComparison() {
         const t = smoothRamp(clamp(s.frame / S1_FRAMES, 0, 1));
         s.pts.forEach(p => { const pos = qbez(p.sx, p.sy, p.cpx, p.cpy, p.z0x, p.z0y, t); p.x = pos.x; p.y = pos.y; });
       } else if (s.stage === 2) {
-        // Original behavior: constant lerp toward nearest blue dot (frozen)
         s.trajs.forEach(tr => {
           const tgt = s.pts[tr.targetIdx];
-          tr.ex = lerp(tr.ex, tgt.x, tr.lerpSpd);
-          tr.ey = lerp(tr.ey, tgt.y, tr.lerpSpd);
+          tr.ex = lerp(tr.ex, tgt.x + tr.tgtOffX, tr.lerpSpd);
+          tr.ey = lerp(tr.ey, tgt.y + tr.tgtOffY, tr.lerpSpd);
         });
       } else {
         // Blue dots: smooth movement with nonzero initial speed
@@ -232,8 +236,8 @@ export default function TrainingComparison() {
         s.trajs.forEach(tr => {
           const tgt = s.pts[tr.targetIdx];
           const spd = 0.003 + tr.lerpSpd * anneal * 5;
-          tr.ex = lerp(tr.ex, tgt.x, spd);
-          tr.ey = lerp(tr.ey, tgt.y, spd);
+          tr.ex = lerp(tr.ex, tgt.x + tr.tgtOffX, spd);
+          tr.ey = lerp(tr.ey, tgt.y + tr.tgtOffY, spd);
         });
       }
 
