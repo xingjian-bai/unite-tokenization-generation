@@ -970,13 +970,13 @@ button {
   position: relative;
   font-size: 0.65rem;
   font-weight: 600;
-  color: #b45309;
+  color: #fff;
+  background: #c2650a;
   letter-spacing: 0.02em;
   white-space: nowrap;
   padding: 2px 6px;
-  border: 1px dashed rgba(180,83,9,0.35);
+  border: 1px solid rgba(180,83,9,0.3);
   border-radius: 3px;
-  background: rgba(254,249,231,0.95);
   z-index: 1;
 }
 .tc-node {
@@ -990,6 +990,7 @@ button {
 .tc-node-blue { color: #2563eb; border-color: rgba(37,99,235,0.2); background: #eef4ff; }
 .tc-node-purp { color: #7c3aed; border-color: rgba(124,58,237,0.2); background: #f3eeff; }
 .tc-node-gold { color: #b45309; border-color: rgba(180,83,9,0.2); background: #fef9e7; }
+.tc-node-ge { color: #fff; border-color: rgba(180,83,9,0.4); background: #c2650a; font-weight: 600; }
 .tc-node-sm { font-size: 0.8rem; color: #94a3b8; border: none; background: none; padding: 0 5px; }
 .tc-arr { color: #cbd5e1; font-size: 1rem; padding: 0 5px; }
 .tc-arr-on { color: #64748b; }

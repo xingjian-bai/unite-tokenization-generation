@@ -137,6 +137,19 @@ export default function TrainingComparison() {
     }
   }, []);
 
+  // Compute a soft target: near the blue dot but biased toward the start point
+  function computeSoftTarget(sx, sy, tgtX, tgtY) {
+    const dx = sx - tgtX, dy = sy - tgtY;
+    const len = Math.hypot(dx, dy) || 1;
+    // Offset toward start by 15-35px + small random perpendicular jitter
+    const along = rnd(15, 35);
+    const perp = rnd(-20, 20);
+    return {
+      tx: tgtX + (dx / len) * along + (-dy / len) * perp,
+      ty: tgtY + (dy / len) * along + (dx / len) * perp,
+    };
+  }
+
   const initTrajs = useCallback(() => {
     const s = stateRef.current;
     s.trajs = [];
@@ -144,11 +157,15 @@ export default function TrainingComparison() {
       const sx = clamp(GCX + randn() * SIG_X, 15, CW - 15);
       const sy = clamp(GCY + randn() * SIG_Y, 15, CH - 15);
       const ni = nearestPt(s.pts, sx, sy);
+      const tgt = s.pts[ni];
+      // Soft target for Stage 2: near blue dot, biased toward start
+      const { tx, ty } = computeSoftTarget(sx, sy, tgt.z0x, tgt.z0y);
       s.trajs.push({
         sx, sy,
         ex: rnd(40, CW - 40), ey: rnd(40, CH - 40),
         targetIdx: ni,
-        off1: rnd(-55, 55), off2: rnd(-55, 55),
+        softTx: tx, softTy: ty,
+        off1: rnd(-30, 30), off2: rnd(-30, 30),
         lerpSpd: rnd(0.013, 0.024),
       });
     }
@@ -178,13 +195,6 @@ export default function TrainingComparison() {
       Object.assign(p, ns);
     });
     initTrajs();
-    // Precompute soft targets: near the nearest blue dot's final position, but offset
-    s.trajs.forEach(tr => {
-      const ni = nearestPt(s.pts.map(p => ({ x: p.z0x, y: p.z0y })), tr.sx, tr.sy);
-      const tgt = s.pts[ni];
-      tr.softTx = tgt.z0x + rnd(-40, 40);
-      tr.softTy = tgt.z0y + rnd(-30, 30);
-    });
     setStage(3);
   }, [initTrajs]);
 
@@ -216,26 +226,24 @@ export default function TrainingComparison() {
         const t = smoothRamp(clamp(s.frame / S1_FRAMES, 0, 1));
         s.pts.forEach(p => { const pos = qbez(p.sx, p.sy, p.cpx, p.cpy, p.z0x, p.z0y, t); p.x = pos.x; p.y = pos.y; });
       } else if (s.stage === 2) {
-        // Orange trajectories: smooth ramp so they start moving immediately
+        // Orange trajectories toward soft targets (near but not at blue dots)
         const progress = smoothRamp(clamp(s.frame / S2_FRAMES, 0, 1));
-        const spd2 = 0.006 + progress * 0.034; // nonzero initial speed
+        const spd2 = 0.006 + progress * 0.034;
         s.trajs.forEach(tr => {
-          const tgt = s.pts[tr.targetIdx];
-          tr.ex = lerp(tr.ex, tgt.x, spd2);
-          tr.ey = lerp(tr.ey, tgt.y, spd2);
+          tr.ex = lerp(tr.ex, tr.softTx, spd2);
+          tr.ey = lerp(tr.ey, tr.softTy, spd2);
         });
       } else {
-        // Blue dots: ease-out but gentler (easeO2 not easeO3)
+        // Blue dots: move first (use full time range)
         const tPts = easeO2(clamp(s.frame / S3_FRAMES, 0, 1));
         s.pts.forEach(p => { const pos = qbez(p.sx, p.sy, p.cpx, p.cpy, p.z0x, p.z0y, tPts); p.x = pos.x; p.y = pos.y; });
-        // Orange trajectories: lerp toward fixed soft targets (no RBF recomputation = no jumps)
-        const anneal = smoothRamp(clamp(s.frame / S3_FRAMES, 0, 1));
+        // Orange trajectories: delayed start (begin after ~15% of animation)
+        const delayed = clamp((s.frame - S3_FRAMES * 0.12) / (S3_FRAMES * 0.88), 0, 1);
+        const anneal = smoothRamp(delayed);
         const spd3 = 0.005 + anneal * 0.035;
         s.trajs.forEach(tr => {
-          const tx = tr.softTx !== undefined ? tr.softTx : tr.ex;
-          const ty = tr.softTy !== undefined ? tr.softTy : tr.ey;
-          tr.ex = lerp(tr.ex, tx, spd3);
-          tr.ey = lerp(tr.ey, ty, spd3);
+          tr.ex = lerp(tr.ex, tr.softTx, spd3);
+          tr.ey = lerp(tr.ey, tr.softTy, spd3);
         });
       }
 
@@ -425,8 +433,8 @@ export default function TrainingComparison() {
       const lossColor = label.includes("recon") ? "tc-node-loss-blue" : "tc-node-loss-purp";
       return <span key={i} className={`tc-node tc-node-loss ${isJointMode ? "tc-node-loss-gold" : lossColor}`}>{label}</span>;
     }
-    const baseColor = isJointMode ? "tc-node-gold" : rowIdx === 0 ? "tc-node-blue" : "tc-node-purp";
     const isGE = label === "GE";
+    const baseColor = isJointMode ? (isGE ? "tc-node-ge" : "tc-node-gold") : rowIdx === 0 ? "tc-node-blue" : "tc-node-purp";
     return <span key={i} className={`tc-node ${baseColor}`} {...(isGE ? {"data-ge": "true"} : {})}>{label}</span>;
   }
 
