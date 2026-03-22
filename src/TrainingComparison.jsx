@@ -15,7 +15,7 @@ const CLUSTERS = [
   { x: 488, y: 375 }, { x: 228, y: 368 }, { x: 342, y: 228 },
 ];
 const PPC = 7, N_TRAJ = 160;
-const S1_FRAMES = 480, S3_FRAMES = 600;
+const S1_FRAMES = 320, S3_FRAMES = 400;
 
 const rnd = (a, b) => a + Math.random() * (b - a);
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -146,7 +146,7 @@ export default function TrainingComparison() {
         ex: rnd(40, CW - 40), ey: rnd(40, CH - 40),
         targetIdx: ni,
         off1: rnd(-55, 55), off2: rnd(-55, 55),
-        lerpSpd: rnd(0.005, 0.012),
+        lerpSpd: rnd(0.008, 0.018),
       });
     }
   }, []);
