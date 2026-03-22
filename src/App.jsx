@@ -63,7 +63,12 @@ const generationRows = [
   { method: "DiT-XL/2", pipeline: "two-stage", params: "675M+49M", fid: "2.27", is: "278.2", section: "Two-stage", dimmed: true },
   { method: "SiT-XL/2", pipeline: "two-stage", params: "675M+49M", fid: "2.06", is: "277.5", dimmed: true },
   { method: "REPA-SiT-XL/2", pipeline: "two-stage + DINOv2", params: "675M+49M", fid: "1.42", is: "305.7", section: "Two-stage + DINOv2", dimmed: true },
+  { method: "LightningDiT-XL/2", pipeline: "two-stage + DINOv2", params: "675M+49M", fid: "1.35", is: "295.3", dimmed: true },
   { method: "DDT-XL/2", pipeline: "two-stage + DINOv2", params: "675M+49M", fid: "1.26", is: "310.6", dimmed: true },
+  { method: "RAE-DiT-XL/2", pipeline: "two-stage + DINOv2", params: "839M+415M", fid: "1.13", is: "262.6", dimmed: true },
+  { method: "ADM-G", pipeline: "pixel-space", params: "554M", fid: "4.59", is: "186.7", section: "Pixel-space", dimmed: true },
+  { method: "RIN", pipeline: "pixel-space", params: "410M", fid: "3.42", is: "182.0", dimmed: true },
+  { method: "VDM++", pipeline: "pixel-space", params: "2B", fid: "2.12", is: "267.7", dimmed: true },
 ];
 
 const reconstructionRows = [
