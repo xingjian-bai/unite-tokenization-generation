@@ -180,6 +180,17 @@ export default function TrainingComparison() {
   // ── animation loop ──
   useEffect(() => {
     initPts(); buildGaussDots();
+    // HiDPI canvas setup
+    const cv = canvasRef.current;
+    if (cv) {
+      const dpr = window.devicePixelRatio || 1;
+      cv.width = CW * dpr;
+      cv.height = CH * dpr;
+      cv.style.width = "100%";
+      cv.style.aspectRatio = `${CW} / ${CH}`;
+      const ctx = cv.getContext("2d");
+      ctx.scale(dpr, dpr);
+    }
     let raf;
     const loop = () => {
       const s = stateRef.current;
@@ -371,22 +382,12 @@ export default function TrainingComparison() {
   }
 
   // ── pipeline node labels ──
+  const sharedRow1 = ["Image", "\u2192", stage === 3 ? "GE" : "Encoder", "\u2192", "z\u2080", "\u2192", "Decoder", "\u2192", "x\u0302", "|", "L_recon"];
+  const sharedRow2 = ["\uD835\uDCA9(0,I)", "\u2192", stage === 3 ? "GE" : "Denoiser", "\u2192", "z\u209C", "\u27F6", "z\u2080", "|", "L_flow"];
   const pipeLabels = {
-    1: {
-      row1: ["Image", "\u2192", "Encoder", "\u2192", "z\u2080", "\u2192", "Decoder", "\u2192", "x\u0302", "|", "L_recon"],
-      row2: ["\uD835\uDCA9(0,I)", "\u2192", "Denoiser", "\u2192", "z\u209C", "\u27F6", "z\u2080"],
-      row1Active: true, row2Active: false,
-    },
-    2: {
-      row1: ["Image", "\u2192", "Encoder", "\u2192", "z\u2080", "\u2192", "Decoder", "\u2192", "x\u0302"],
-      row2: ["\uD835\uDCA9(0,I)", "\u2192", "Denoiser", "\u2192", "z\u209C", "\u27F6", "z\u2080", "|", "L_flow"],
-      row1Active: false, row2Active: true,
-    },
-    3: {
-      row1: ["Image", "\u2192", "GE", "\u2192", "z\u2080", "\u2192", "Decoder", "\u2192", "x\u0302", "|", "L_recon"],
-      row2: ["\uD835\uDCA9(0,I)", "\u2192", "GE", "\u2192", "z\u209C", "\u27F6", "z\u2080", "|", "L_flow"],
-      row1Active: true, row2Active: true,
-    },
+    1: { row1: sharedRow1, row2: sharedRow2, row1Active: true, row2Active: false },
+    2: { row1: sharedRow1, row2: sharedRow2, row1Active: false, row2Active: true },
+    3: { row1: sharedRow1, row2: sharedRow2, row1Active: true, row2Active: true },
   };
 
   const pipe = pipeLabels[stage];
@@ -400,7 +401,7 @@ export default function TrainingComparison() {
 
   function renderPipeNode(label, i, isActive, isJointMode, rowIdx) {
     if (label === "|") return <span key={i} className="tc-pipe-sep">{label}</span>;
-    if (label.startsWith("\u2112")) {
+    if (label.startsWith("L_")) {
       const lossColor = label.includes("recon") ? "tc-node-loss-blue" : "tc-node-loss-purp";
       return <span key={i} className={`tc-node tc-node-loss ${isJointMode ? "tc-node-loss-gold" : lossColor}`}>{label}</span>;
     }
@@ -441,7 +442,7 @@ export default function TrainingComparison() {
         </div>
       </div>
 
-      <canvas ref={canvasRef} width={CW} height={CH} className="tc-canvas" />
+      <canvas ref={canvasRef} className="tc-canvas" />
 
       <p className="tc-desc">{stageInfo[stage].desc}</p>
     </div>

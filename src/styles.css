@@ -998,8 +998,6 @@ button {
   border: 1px solid #e2e8f0;
   width: 100%;
   display: block;
-  max-width: 100%;
-  height: auto;
 }
 .tc-desc {
   max-width: 760px;
