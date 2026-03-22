@@ -23,8 +23,9 @@ const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 const easeO3 = t => 1 - Math.pow(1 - t, 3);
 const easeO2 = t => 1 - (1 - t) * (1 - t); // quadratic ease-out: fast start, gentle slow
 const easeIO = t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-// Smooth ramp with nonzero initial speed: blend of linear + ease-out
-const smoothRamp = t => 0.15 * t + 0.85 * easeO2(t);
+// Smooth ramp: fast start, maintains speed through ~75%, decelerates only at the end
+const easeO4 = t => 1 - Math.pow(1 - t, 4);
+const smoothRamp = t => 0.1 * t + 0.9 * easeO4(t);
 function randn() { return Math.sqrt(-2 * Math.log(Math.random() + 1e-12)) * Math.cos(2 * Math.PI * Math.random()); }
 
 const C_BLUE = [59, 130, 246];
