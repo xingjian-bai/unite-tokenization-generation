@@ -178,6 +178,12 @@ export default function TrainingComparison() {
       Object.assign(p, ns);
     });
     initTrajs();
+    // Reassign targetIdx based on FINAL blue dot positions (z0x, z0y)
+    // so trajectories go to the same targets as Stage 2 — no cross-overs
+    const finalPts = s.pts.map(p => ({ x: p.z0x, y: p.z0y }));
+    s.trajs.forEach(tr => {
+      tr.targetIdx = nearestPt(finalPts, tr.sx, tr.sy);
+    });
     setStage(3);
   }, [initTrajs]);
 
@@ -219,17 +225,14 @@ export default function TrainingComparison() {
         // Blue dots: smooth movement with nonzero initial speed
         const tPts = smoothRamp(clamp(s.frame / S3_FRAMES, 0, 1));
         s.pts.forEach(p => { const pos = qbez(p.sx, p.sy, p.cpx, p.cpy, p.z0x, p.z0y, tPts); p.x = pos.x; p.y = pos.y; });
-        // Orange trajectories: original RBF approach (smooth sigma annealing)
-        // Target is RBF-weighted blend of ALL blue dots, evaluated at fixed (sx,sy).
-        // As sigma shrinks 220→30, blend narrows from global average to nearest blue.
-        // This is inherently smooth — no sudden target switches.
+        // Orange trajectories: follow assigned blue dot (same assignment as Stage 2)
+        // targetIdx is based on final positions → no cross-overs
         const anneal = easeIO(clamp(s.frame / S3_FRAMES, 0, 1));
-        const sigma = lerp(220, 30, anneal);
         s.trajs.forEach(tr => {
-          const [tx, ty] = rbfTarget(s.pts, tr.sx, tr.sy, sigma);
+          const tgt = s.pts[tr.targetIdx];
           const spd = tr.lerpSpd * anneal * 4;
-          tr.ex = lerp(tr.ex, tx, spd);
-          tr.ey = lerp(tr.ey, ty, spd);
+          tr.ex = lerp(tr.ex, tgt.x, spd);
+          tr.ey = lerp(tr.ey, tgt.y, spd);
         });
       }
 
