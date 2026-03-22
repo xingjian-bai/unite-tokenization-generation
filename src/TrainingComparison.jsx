@@ -412,7 +412,7 @@ export default function TrainingComparison() {
   }, [isJoint, stage]);
 
   const stageInfo = {
-    1: { badge: "Stage 1: Tokenizer Training", desc: "The encoder maps images to latent embeddings z\u2080, trained with reconstruction loss. Points converge to structured clusters as training progresses." },
+    1: { badge: "Stage 1: Tokenizer Training", desc: "The encoder maps images to latent embeddings z\u2080, trained with reconstruction loss." },
     2: { badge: "Stage 2: Denoiser Training", desc: "z\u2080 is frozen. Trajectories start from Gaussian noise and bend toward the nearest z\u2080 \u2014 the denoiser learns to reverse the noising process via flow matching loss." },
     3: { badge: "UNITE: Joint Training", desc: "Both trained simultaneously \u2014 z\u2080 moves as the Generative Encoder trains while denoising trajectories bend toward their nearest z\u2080. One model, one stage." },
   };
