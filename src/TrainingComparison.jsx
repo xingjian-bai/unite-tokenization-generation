@@ -15,7 +15,7 @@ const CLUSTERS = [
   { x: 488, y: 375 }, { x: 228, y: 368 }, { x: 342, y: 228 },
 ];
 const PPC = 7, N_TRAJ = 160;
-const S1_FRAMES = 320, S3_FRAMES = 400;
+const S1_FRAMES = 360, S3_FRAMES = 500;
 
 const rnd = (a, b) => a + Math.random() * (b - a);
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -146,7 +146,7 @@ export default function TrainingComparison() {
         ex: rnd(40, CW - 40), ey: rnd(40, CH - 40),
         targetIdx: ni,
         off1: rnd(-55, 55), off2: rnd(-55, 55),
-        lerpSpd: rnd(0.008, 0.018),
+        lerpSpd: rnd(0.013, 0.024),
       });
     }
   }, []);
@@ -211,12 +211,15 @@ export default function TrainingComparison() {
           tr.ey = lerp(tr.ey, tgt.y, tr.lerpSpd);
         });
       } else {
-        const t = easeO3(clamp(s.frame / S3_FRAMES, 0, 1));
-        s.pts.forEach(p => { const pos = qbez(p.sx, p.sy, p.cpx, p.cpy, p.z0x, p.z0y, t); p.x = pos.x; p.y = pos.y; });
-        const sigma = lerp(220, 30, t);
+        // Blue dots: ease-out (fast start, slow settle)
+        const tPts = easeO3(clamp(s.frame / S3_FRAMES, 0, 1));
+        s.pts.forEach(p => { const pos = qbez(p.sx, p.sy, p.cpx, p.cpy, p.z0x, p.z0y, tPts); p.x = pos.x; p.y = pos.y; });
+        // Trajectories: ease-in-out (smooth gradual convergence, no abrupt switches)
+        const anneal = easeIO(clamp(s.frame / S3_FRAMES, 0, 1));
+        const sigma = lerp(220, 30, anneal);
         s.trajs.forEach(tr => {
           const [tx, ty] = rbfTarget(s.pts, tr.sx, tr.sy, sigma);
-          const spd = tr.lerpSpd * t * 4;
+          const spd = tr.lerpSpd * anneal * 4;
           tr.ex = lerp(tr.ex, tx, spd);
           tr.ey = lerp(tr.ey, ty, spd);
         });
