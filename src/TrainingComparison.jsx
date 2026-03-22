@@ -137,10 +137,9 @@ export default function TrainingComparison() {
   const initTrajs = useCallback(() => {
     const s = stateRef.current;
     s.trajs = [];
-    const TRAJ_SIG_X = 220, TRAJ_SIG_Y = 150; // large variance, vaguely Gaussian
     for (let i = 0; i < N_TRAJ; i++) {
-      const sx = clamp(GCX + randn() * TRAJ_SIG_X, 25, CW - 25);
-      const sy = clamp(GCY + randn() * TRAJ_SIG_Y, 25, CH - 25);
+      const sx = clamp(GCX + randn() * SIG_X, 15, CW - 15);
+      const sy = clamp(GCY + randn() * SIG_Y, 15, CH - 15);
       const ni = nearestPt(s.pts, sx, sy);
       s.trajs.push({
         sx, sy,
