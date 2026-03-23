@@ -143,9 +143,11 @@ function GenerationTable() {
                 ) : (
                   <span className="cell" data-label="FID">{row.fid}</span>
                 )}
-                <span className="cell" data-label="IS">
-                  {row.is}
-                </span>
+                {row.ours ? (
+                  <strong className="cell cell-strong" data-label="IS">{row.is}</strong>
+                ) : (
+                  <span className="cell" data-label="IS">{row.is}</span>
+                )}
               </div>
             </React.Fragment>
           ))}
