@@ -385,6 +385,7 @@ function App() {
               </p>
             </div>
           </div>
+          <hr className="section-divider" />
         </section>
 
         <section className="section" id="results">

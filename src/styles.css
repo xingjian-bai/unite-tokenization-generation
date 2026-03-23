@@ -296,6 +296,11 @@ button {
   margin-top: 4.8rem;
   scroll-margin-top: 6.5rem;
 }
+.section-divider {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  margin: 3rem 0 0;
+}
 
 /* Abstract block */
 .abstract-block {
