@@ -742,6 +742,35 @@ button {
   --table-columns: 1.15fr 1fr 0.5fr 0.5fr;
 }
 
+.tooltip-wrap {
+  position: relative;
+  cursor: help;
+  border-bottom: 1px dotted #94a3b8;
+}
+.tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #1e293b;
+  color: #f1f5f9;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.45;
+  text-align: center;
+  white-space: normal;
+  z-index: 10;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.tooltip-wrap:hover .tooltip {
+  display: block;
+}
+
 .result-table.table-five {
   --table-columns: 1.3fr 0.7fr 1fr 0.5fr 0.5fr;
 }

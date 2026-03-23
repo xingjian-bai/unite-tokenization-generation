@@ -121,10 +121,10 @@ function GenerationTable() {
         <div className="result-table table-five">
           <div className="table-head">
             <span>Method</span>
-            <span>Params</span>
+            <span>Number of Parameters</span>
             <span>Pipeline</span>
-            <span>FID ↓</span>
-            <span>IS ↑</span>
+            <span className="tooltip-wrap">FID<span className="tooltip">Fr&eacute;chet Inception Distance &mdash; measures how close generated images are to real ones. Lower is better.</span></span>
+            <span className="tooltip-wrap">IS<span className="tooltip">Inception Score &mdash; measures quality and diversity of generated images. Higher is better.</span></span>
           </div>
           {generationRows.map((row) => (
             <React.Fragment key={row.method}>
@@ -137,18 +137,18 @@ function GenerationTable() {
                 <span className="cell cell-primary" data-label="Method">
                   {row.method}
                 </span>
-                <span className="cell" data-label="Params">
+                <span className="cell" data-label="Number of Parameters">
                   {row.params}
                 </span>
                 <span className="cell" data-label="Pipeline">
                   {row.pipeline}
                 </span>
                 {row.ours ? (
-                  <strong className="cell cell-strong" data-label="FID ↓">{row.fid}</strong>
+                  <strong className="cell cell-strong" data-label="FID">{row.fid}</strong>
                 ) : (
-                  <span className="cell" data-label="FID ↓">{row.fid}</span>
+                  <span className="cell" data-label="FID">{row.fid}</span>
                 )}
-                <span className="cell" data-label="IS ↑">
+                <span className="cell" data-label="IS">
                   {row.is}
                 </span>
               </div>
@@ -172,7 +172,7 @@ function ReconstructionTable() {
           <div className="table-head">
             <span>Tokenizer</span>
             <span>Setup</span>
-            <span>rFID ↓</span>
+            <span className="tooltip-wrap">rFID<span className="tooltip">Reconstruction FID &mdash; measures how faithfully the tokenizer reconstructs images. Lower is better.</span></span>
           </div>
           {reconstructionRows.map((row) => (
             <div className={`table-row ${row.ours ? "table-row-ours" : ""}`} key={row.method}>
@@ -183,9 +183,9 @@ function ReconstructionTable() {
                 {row.setup}
               </span>
               {row.ours ? (
-                <strong className="cell cell-strong" data-label="rFID ↓">{row.rfid}</strong>
+                <strong className="cell cell-strong" data-label="rFID">{row.rfid}</strong>
               ) : (
-                <span className="cell" data-label="rFID ↓">{row.rfid}</span>
+                <span className="cell" data-label="rFID">{row.rfid}</span>
               )}
             </div>
           ))}
