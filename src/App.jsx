@@ -342,9 +342,6 @@ function App() {
                 while starting from noise yields a broader distribution for sampling.
               </p>
             </div>
-            <div className="loop-panel-figure reveal">
-              <LatentAnimation />
-            </div>
           </div>
 
           <div className="loop-panel" id="loop">
