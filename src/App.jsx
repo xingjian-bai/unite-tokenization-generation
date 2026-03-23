@@ -272,18 +272,15 @@ function App() {
             <div className="hero-copy">
               <h1>UNITE: End-to-End Training for Unified Tokenization and Latent Denoising</h1>
               <p className="hero-authors">
-                <a href="https://shivamduggal4.github.io/" target="_blank" rel="noopener noreferrer">Shivam Duggal*</a><sup>1</sup>,{" "}
-                <a href="https://xingjianbai.com/" target="_blank" rel="noopener noreferrer">Xingjian Bai*</a><sup>1</sup>,{" "}
-                <a href="https://betterze.github.io/website/" target="_blank" rel="noopener noreferrer">Zongze Wu</a><sup>2</sup>,{" "}
-                <a href="https://richzhang.github.io/" target="_blank" rel="noopener noreferrer">Richard Zhang</a><sup>2</sup>,{" "}
-                <a href="https://scholar.google.com/citations?user=B_FTboQAAAAJ" target="_blank" rel="noopener noreferrer">Eli Shechtman</a><sup>2</sup>,
+                <a href="https://shivamduggal4.github.io/" target="_blank" rel="noopener noreferrer">Shivam Duggal*</a>,{" "}
+                <a href="https://xingjianbai.com/" target="_blank" rel="noopener noreferrer">Xingjian Bai*</a>,{" "}
+                <a href="https://betterze.github.io/website/" target="_blank" rel="noopener noreferrer">Zongze Wu</a>,{" "}
+                <a href="https://richzhang.github.io/" target="_blank" rel="noopener noreferrer">Richard Zhang</a>,{" "}
+                <a href="https://scholar.google.com/citations?user=B_FTboQAAAAJ" target="_blank" rel="noopener noreferrer">Eli Shechtman</a>,
                 <br />
-                <a href="https://groups.csail.mit.edu/vision/torralbalab/" target="_blank" rel="noopener noreferrer">Antonio Torralba</a><sup>1</sup>,{" "}
-                <a href="https://web.mit.edu/phillipi/" target="_blank" rel="noopener noreferrer">Phillip Isola</a><sup>1</sup>,{" "}
-                <a href="https://billf.mit.edu/" target="_blank" rel="noopener noreferrer">William T. Freeman</a><sup>1</sup>
-              </p>
-              <p className="hero-meta">
-                <sup>1</sup>Massachusetts Institute of Technology &nbsp; <sup>2</sup>Adobe
+                <a href="https://groups.csail.mit.edu/vision/torralbalab/" target="_blank" rel="noopener noreferrer">Antonio Torralba</a>,{" "}
+                <a href="https://web.mit.edu/phillipi/" target="_blank" rel="noopener noreferrer">Phillip Isola</a>,{" "}
+                <a href="https://billf.mit.edu/" target="_blank" rel="noopener noreferrer">William T. Freeman</a>
               </p>
               <div className="hero-actions">
                 <a className="button primary" href="./assets/docs/unite-paper.pdf">
