@@ -115,14 +115,12 @@ function GenerationTable() {
       <div className="table-card reveal">
       <div className="table-title">
         <p className="card-kicker">ImageNet-256 generation</p>
-        <h3>Strong ImageNet generation</h3>
       </div>
       <div className="table-wrap">
-        <div className="result-table table-five">
+        <div className="result-table table-four">
           <div className="table-head">
             <span>Method</span>
             <span>Number of Parameters</span>
-            <span>Pipeline</span>
             <span className="tooltip-wrap">FID<span className="tooltip">Fr&eacute;chet Inception Distance &mdash; measures how close generated images are to real ones. Lower is better.</span></span>
             <span className="tooltip-wrap">IS<span className="tooltip">Inception Score &mdash; measures quality and diversity of generated images. Higher is better.</span></span>
           </div>
@@ -139,9 +137,6 @@ function GenerationTable() {
                 </span>
                 <span className="cell" data-label="Number of Parameters">
                   {row.params}
-                </span>
-                <span className="cell" data-label="Pipeline">
-                  {row.pipeline}
                 </span>
                 {row.ours ? (
                   <strong className="cell cell-strong" data-label="FID">{row.fid}</strong>
@@ -395,7 +390,7 @@ function App() {
         <section className="section" id="results">
           <div className="loop-intro reveal">
             <p className="card-kicker">Results</p>
-            <h3>Single-stage, end-to-end — no pre-trained DINO, no adversarial loss</h3>
+            <h3>Our model compares favorably with other single-stage models</h3>
           </div>
 
           <div className="results-grid">

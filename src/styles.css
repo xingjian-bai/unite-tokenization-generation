@@ -739,7 +739,7 @@ button {
 }
 
 .result-table.table-four {
-  --table-columns: 1.15fr 1fr 0.5fr 0.5fr;
+  --table-columns: 1.4fr 1fr 0.5fr 0.5fr;
 }
 
 .tooltip-wrap {
@@ -785,7 +785,7 @@ button {
 
 .table-head {
   padding: 0 0.3rem 0.35rem;
-  font-size: 0.84rem;
+  font-size: 0.92rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -809,8 +809,8 @@ button {
 }
 
 .table-section-header {
-  padding: 0.45rem 0.6rem 0.2rem;
-  font-size: 0.75rem;
+  padding: 0.55rem 0.6rem 0.25rem;
+  font-size: 0.88rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
