@@ -257,7 +257,8 @@ function App() {
       {lightbox && <Lightbox image={lightbox.image} title={lightbox.title} onClose={closeLightbox} />}
       <header className="site-header">
         <a className="brand" href="#top">
-          UNITE: Unified Tokenization and Latent Denoising
+          <span className="brand-full">UNITE: Unified Tokenization and Latent Denoising</span>
+          <span className="brand-short">UNITE</span>
         </a>
         <nav className="site-nav">
           {navItems.map((item) => (
