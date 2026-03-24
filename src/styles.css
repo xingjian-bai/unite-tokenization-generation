@@ -971,12 +971,7 @@ button {
   border: 1px solid transparent;
   transition: border-color 0.5s, box-shadow 0.5s;
 }
-.tc-prow-offset-r {
-  transform: translateX(161px);
-}
-.tc-rows-joint {
-  transform: translateX(-82px);
-}
+/* GE alignment offsets are now computed dynamically in JS */
 .tc-prow {
   display: flex;
   align-items: center;

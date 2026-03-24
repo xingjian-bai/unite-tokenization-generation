@@ -47,6 +47,8 @@ export default function TrainingComparison() {
   const stateRef = useRef({ pts: [], trajs: [], gaussDots: [], frame: 0, stage: 1, startTime: 0, lastTime: 0 });
   const [stage, setStage] = useState(1);
   const [bridgeStyle, setBridgeStyle] = useState({});
+  const [row1Offset, setRow1Offset] = useState(0);
+  const [jointOffset, setJointOffset] = useState(0);
 
   // ── helpers ──
   function glowDot(cx, x, y, r, [cr, cg, cb], gs, alpha = 1) {
@@ -410,17 +412,37 @@ export default function TrainingComparison() {
   const pipe = pipeLabels[stage];
   const isJoint = stage === 3;
 
-  // Measure GE node positions to place the bridge
+  // Measure GE node positions to compute dynamic alignment offsets + bridge
   useEffect(() => {
-    if (!isJoint || !pipelineRef.current) return;
-    const container = pipelineRef.current;
-    const geNodes = container.querySelectorAll("[data-ge]");
-    if (geNodes.length < 2) return;
-    const containerRect = container.getBoundingClientRect();
-    const r0 = geNodes[0].getBoundingClientRect();
-    const r1 = geNodes[1].getBoundingClientRect();
-    const left = ((r0.left + r1.left) / 2 - containerRect.left) + (r0.width / 2) - 36;
-    setBridgeStyle({ left: `${left}px`, width: "72px" });
+    if (!isJoint || !pipelineRef.current) {
+      setRow1Offset(0);
+      setJointOffset(0);
+      return;
+    }
+    // Use rAF to ensure layout is settled after stage change
+    const measure = () => {
+      const container = pipelineRef.current;
+      if (!container) return;
+      const geNodes = container.querySelectorAll("[data-ge]");
+      if (geNodes.length < 2) return;
+      const r0 = geNodes[0].getBoundingClientRect(); // GE in row1
+      const r1 = geNodes[1].getBoundingClientRect(); // GE in row2
+      const containerRect = container.getBoundingClientRect();
+      // How far right row1's GE needs to shift so its center aligns with row2's GE center
+      const ge0Center = r0.left + r0.width / 2;
+      const ge1Center = r1.left + r1.width / 2;
+      const shift = ge1Center - ge0Center;
+      setRow1Offset(shift);
+      // Shift the whole container left by half to keep it visually centered
+      setJointOffset(-shift / 2);
+      // Bridge position
+      const left = ((r0.left + shift + r1.left) / 2 - containerRect.left) + (r0.width / 2) - 36;
+      setBridgeStyle({ left: `${left}px`, width: "72px" });
+    };
+    // Measure twice: once immediately, once after rAF for layout settle
+    measure();
+    const raf = requestAnimationFrame(measure);
+    return () => cancelAnimationFrame(raf);
   }, [isJoint, stage]);
 
   const stageInfo = {
@@ -457,8 +479,8 @@ export default function TrainingComparison() {
       </div>
 
       <div className="tc-pipeline">
-        <div className={`tc-pipeline-rows ${isJoint ? "tc-rows-joint" : ""}`} ref={pipelineRef}>
-          <div className={`tc-prow ${!pipe.row1Active && !isJoint ? "tc-prow-dim" : ""} ${isJoint ? "tc-prow-gold tc-prow-offset-r" : ""}`}>
+        <div className={`tc-pipeline-rows`} ref={pipelineRef} style={isJoint ? { transform: `translateX(${jointOffset}px)` } : undefined}>
+          <div className={`tc-prow ${!pipe.row1Active && !isJoint ? "tc-prow-dim" : ""} ${isJoint ? "tc-prow-gold" : ""}`} style={isJoint ? { transform: `translateX(${row1Offset}px)` } : undefined}>
             {pipe.row1.map((label, i) => renderPipeNode(label, i, pipe.row1Active, isJoint, 0))}
           </div>
           <div className={`tc-prow ${!pipe.row2Active && !isJoint ? "tc-prow-dim" : ""} ${isJoint ? "tc-prow-gold" : ""}`}>
