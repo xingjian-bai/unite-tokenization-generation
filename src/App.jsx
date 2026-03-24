@@ -285,8 +285,8 @@ function App() {
                 <a href="https://billf.mit.edu/" target="_blank" rel="noopener noreferrer">William T. Freeman</a>
               </p>
               <div className="hero-actions">
-                <a className="button primary" href="./assets/docs/unite-paper.pdf">
-                  Paper PDF
+                <a className="button primary" href="https://arxiv.org/abs/2603.22283" target="_blank" rel="noopener noreferrer">
+                  arXiv
                 </a>
                 <a className="button" href="https://github.com/ShivamDuggal4/united-final-check-pre-release" target="_blank" rel="noopener noreferrer">
                   GitHub
