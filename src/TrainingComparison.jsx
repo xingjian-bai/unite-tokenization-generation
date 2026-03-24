@@ -44,7 +44,7 @@ function ztRGB(t) {
 export default function TrainingComparison() {
   const canvasRef = useRef(null);
   const pipelineRef = useRef(null);
-  const stateRef = useRef({ pts: [], trajs: [], gaussDots: [], frame: 0, stage: 1 });
+  const stateRef = useRef({ pts: [], trajs: [], gaussDots: [], frame: 0, stage: 1, startTime: 0, lastTime: 0 });
   const [stage, setStage] = useState(1);
   const [bridgeStyle, setBridgeStyle] = useState({});
 
@@ -163,14 +163,14 @@ export default function TrainingComparison() {
   // ── stage transitions ──
   const goStage1 = useCallback(() => {
     const s = stateRef.current;
-    s.stage = 1; s.frame = 0; s.trajs = [];
+    s.stage = 1; s.frame = 0; s.startTime = performance.now(); s.lastTime = s.startTime; s.trajs = [];
     initPts(); buildGaussDots();
     setStage(1);
   }, [initPts, buildGaussDots]);
 
   const goStage2 = useCallback(() => {
     const s = stateRef.current;
-    s.stage = 2; s.frame = 0;
+    s.stage = 2; s.frame = 0; s.startTime = performance.now(); s.lastTime = s.startTime;
     s.pts.forEach(p => { p.x = p.z0x; p.y = p.z0y; });
     initTrajs();
     setStage(2);
@@ -178,14 +178,12 @@ export default function TrainingComparison() {
 
   const goStage3 = useCallback(() => {
     const s = stateRef.current;
-    s.stage = 3; s.frame = 0;
+    s.stage = 3; s.frame = 0; s.startTime = performance.now(); s.lastTime = s.startTime;
     s.pts.forEach(p => {
       const ns = makeBezierPt(p.ci, rnd(50, CW - 50), rnd(50, CH - 50), p.z0x, p.z0y);
       Object.assign(p, ns);
     });
     initTrajs();
-    // Reassign targetIdx based on FINAL blue dot positions (z0x, z0y)
-    // so trajectories go to the same targets as Stage 2 — no cross-overs
     const finalPts = s.pts.map(p => ({ x: p.z0x, y: p.z0y }));
     s.trajs.forEach(tr => {
       tr.targetIdx = nearestPt(finalPts, tr.sx, tr.sy);
@@ -196,6 +194,8 @@ export default function TrainingComparison() {
   // ── animation loop ──
   useEffect(() => {
     initPts(); buildGaussDots();
+    stateRef.current.startTime = performance.now();
+    stateRef.current.lastTime = stateRef.current.startTime;
     // HiDPI canvas setup
     const cv = canvasRef.current;
     if (cv) {
@@ -216,30 +216,38 @@ export default function TrainingComparison() {
       const dpr = window.devicePixelRatio || 1;
       cx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      // ── update ──
-      s.frame++;
+      // ── update (time-based: consistent speed across frame rates) ──
+      const now = performance.now();
+      const dt = now - s.lastTime;
+      s.lastTime = now;
+      // Convert elapsed time to equivalent frames at 60fps
+      const dtFrames = dt * 60 / 1000;
+      s.frame += dtFrames;
       if (s.stage === 1) {
         // Blue dots: smooth ramp with nonzero initial speed
         const t = smoothRamp(clamp(s.frame / S1_FRAMES, 0, 1));
         s.pts.forEach(p => { const pos = qbez(p.sx, p.sy, p.cpx, p.cpy, p.z0x, p.z0y, t); p.x = pos.x; p.y = pos.y; });
       } else if (s.stage === 2) {
+        // Lerp speed compensation: apply multiple sub-steps for low frame rates
+        // so convergence speed is frame-rate independent
         s.trajs.forEach(tr => {
           const tgt = s.pts[tr.targetIdx];
-          tr.ex = lerp(tr.ex, tgt.x + tr.tgtOffX, tr.lerpSpd);
-          tr.ey = lerp(tr.ey, tgt.y + tr.tgtOffY, tr.lerpSpd);
+          const effectiveRetain = Math.pow(1 - tr.lerpSpd, dtFrames);
+          tr.ex = tgt.x + tr.tgtOffX + (tr.ex - tgt.x - tr.tgtOffX) * effectiveRetain;
+          tr.ey = tgt.y + tr.tgtOffY + (tr.ey - tgt.y - tr.tgtOffY) * effectiveRetain;
         });
       } else {
         // Blue dots: smooth movement with nonzero initial speed
         const tPts = smoothRamp(clamp(s.frame / S3_FRAMES, 0, 1));
         s.pts.forEach(p => { const pos = qbez(p.sx, p.sy, p.cpx, p.cpy, p.z0x, p.z0y, tPts); p.x = pos.x; p.y = pos.y; });
         // Orange trajectories: follow assigned blue dot (same assignment as Stage 2)
-        // smoothRamp gives nonzero initial speed — no sudden catch-up jumps
         const anneal = smoothRamp(clamp(s.frame / S3_FRAMES, 0, 1));
         s.trajs.forEach(tr => {
           const tgt = s.pts[tr.targetIdx];
           const spd = 0.003 + tr.lerpSpd * anneal * 5;
-          tr.ex = lerp(tr.ex, tgt.x + tr.tgtOffX, spd);
-          tr.ey = lerp(tr.ey, tgt.y + tr.tgtOffY, spd);
+          const effectiveRetain = Math.pow(1 - spd, dtFrames);
+          tr.ex = tgt.x + tr.tgtOffX + (tr.ex - tgt.x - tr.tgtOffX) * effectiveRetain;
+          tr.ey = tgt.y + tr.tgtOffY + (tr.ey - tgt.y - tr.tgtOffY) * effectiveRetain;
         });
       }
 
