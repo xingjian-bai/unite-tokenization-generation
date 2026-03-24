@@ -15,7 +15,7 @@ const CLUSTERS = [
   { x: 488, y: 375 }, { x: 228, y: 368 }, { x: 342, y: 228 },
 ];
 const PPC = 7, N_TRAJ = 160;
-const S1_FRAMES = 360, S2_FRAMES = 500, S3_FRAMES = 620;
+const S1_MS = 6000, S2_MS = 8333, S3_MS = 10333;
 
 const rnd = (a, b) => a + Math.random() * (b - a);
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -44,7 +44,7 @@ function ztRGB(t) {
 export default function TrainingComparison() {
   const canvasRef = useRef(null);
   const pipelineRef = useRef(null);
-  const stateRef = useRef({ pts: [], trajs: [], gaussDots: [], frame: 0, stage: 1, startTime: 0, lastTime: 0 });
+  const stateRef = useRef({ pts: [], trajs: [], gaussDots: [], elapsed: 0, stage: 1, lastTime: 0 });
   const [stage, setStage] = useState(1);
   const [bridgeStyle, setBridgeStyle] = useState({});
   const [row1Offset, setRow1Offset] = useState(0);
@@ -165,14 +165,14 @@ export default function TrainingComparison() {
   // ── stage transitions ──
   const goStage1 = useCallback(() => {
     const s = stateRef.current;
-    s.stage = 1; s.frame = 0; s.startTime = performance.now(); s.lastTime = s.startTime; s.trajs = [];
+    s.stage = 1; s.elapsed = 0; s.lastTime = 0; s.trajs = [];
     initPts(); buildGaussDots();
     setStage(1);
   }, [initPts, buildGaussDots]);
 
   const goStage2 = useCallback(() => {
     const s = stateRef.current;
-    s.stage = 2; s.frame = 0; s.startTime = performance.now(); s.lastTime = s.startTime;
+    s.stage = 2; s.elapsed = 0; s.lastTime = 0;
     s.pts.forEach(p => { p.x = p.z0x; p.y = p.z0y; });
     initTrajs();
     setStage(2);
@@ -180,7 +180,7 @@ export default function TrainingComparison() {
 
   const goStage3 = useCallback(() => {
     const s = stateRef.current;
-    s.stage = 3; s.frame = 0; s.startTime = performance.now(); s.lastTime = s.startTime;
+    s.stage = 3; s.elapsed = 0; s.lastTime = 0;
     s.pts.forEach(p => {
       const ns = makeBezierPt(p.ci, rnd(50, CW - 50), rnd(50, CH - 50), p.z0x, p.z0y);
       Object.assign(p, ns);
@@ -196,8 +196,6 @@ export default function TrainingComparison() {
   // ── animation loop ──
   useEffect(() => {
     initPts(); buildGaussDots();
-    stateRef.current.startTime = performance.now();
-    stateRef.current.lastTime = stateRef.current.startTime;
     // HiDPI canvas setup
     const cv = canvasRef.current;
     if (cv) {
@@ -220,34 +218,31 @@ export default function TrainingComparison() {
 
       // ── update (time-based: consistent speed across frame rates) ──
       const now = performance.now();
-      const dt = now - s.lastTime;
+      const delta = s.lastTime ? now - s.lastTime : 16.67;
       s.lastTime = now;
-      // Convert elapsed time to equivalent frames at 60fps
-      const dtFrames = dt * 60 / 1000;
-      s.frame += dtFrames;
+      s.elapsed += delta;
+      const dtScale = delta / 16.67;
       if (s.stage === 1) {
         // Blue dots: smooth ramp with nonzero initial speed
-        const t = smoothRamp(clamp(s.frame / S1_FRAMES, 0, 1));
+        const t = smoothRamp(clamp(s.elapsed / S1_MS, 0, 1));
         s.pts.forEach(p => { const pos = qbez(p.sx, p.sy, p.cpx, p.cpy, p.z0x, p.z0y, t); p.x = pos.x; p.y = pos.y; });
       } else if (s.stage === 2) {
-        // Lerp speed compensation: apply multiple sub-steps for low frame rates
-        // so convergence speed is frame-rate independent
         s.trajs.forEach(tr => {
           const tgt = s.pts[tr.targetIdx];
-          const effectiveRetain = Math.pow(1 - tr.lerpSpd, dtFrames);
+          const effectiveRetain = Math.pow(1 - tr.lerpSpd, dtScale);
           tr.ex = tgt.x + tr.tgtOffX + (tr.ex - tgt.x - tr.tgtOffX) * effectiveRetain;
           tr.ey = tgt.y + tr.tgtOffY + (tr.ey - tgt.y - tr.tgtOffY) * effectiveRetain;
         });
       } else {
         // Blue dots: smooth movement with nonzero initial speed
-        const tPts = smoothRamp(clamp(s.frame / S3_FRAMES, 0, 1));
+        const tPts = smoothRamp(clamp(s.elapsed / S3_MS, 0, 1));
         s.pts.forEach(p => { const pos = qbez(p.sx, p.sy, p.cpx, p.cpy, p.z0x, p.z0y, tPts); p.x = pos.x; p.y = pos.y; });
         // Orange trajectories: follow assigned blue dot (same assignment as Stage 2)
-        const anneal = smoothRamp(clamp(s.frame / S3_FRAMES, 0, 1));
+        const anneal = smoothRamp(clamp(s.elapsed / S3_MS, 0, 1));
         s.trajs.forEach(tr => {
           const tgt = s.pts[tr.targetIdx];
           const spd = 0.003 + tr.lerpSpd * anneal * 5;
-          const effectiveRetain = Math.pow(1 - spd, dtFrames);
+          const effectiveRetain = Math.pow(1 - spd, dtScale);
           tr.ex = tgt.x + tr.tgtOffX + (tr.ex - tgt.x - tr.tgtOffX) * effectiveRetain;
           tr.ey = tgt.y + tr.tgtOffY + (tr.ey - tgt.y - tr.tgtOffY) * effectiveRetain;
         });
@@ -261,7 +256,7 @@ export default function TrainingComparison() {
 
       // ── subtle background tint for Stage 2 & 3 ──
       if (s.stage >= 2) {
-        const fi = clamp(s.frame / 60, 0, 1);
+        const fi = clamp(s.elapsed / 1000, 0, 1);
         const bg = cx.createRadialGradient(GCX, GCY, 0, GCX, GCY, 260);
         bg.addColorStop(0, `rgba(140,70,210,${0.04 * fi})`);
         bg.addColorStop(0.6, `rgba(140,70,210,${0.02 * fi})`);
@@ -270,8 +265,8 @@ export default function TrainingComparison() {
       }
 
       // ── cluster glows ──
-      const p1 = s.stage === 1 ? easeIO(clamp(s.frame / S1_FRAMES, 0, 1))
-        : s.stage === 3 ? easeIO(clamp(s.frame / S3_FRAMES, 0, 1)) : 1;
+      const p1 = s.stage === 1 ? easeIO(clamp(s.elapsed / S1_MS, 0, 1))
+        : s.stage === 3 ? easeIO(clamp(s.elapsed / S3_MS, 0, 1)) : 1;
       if (p1 >= 0.12) {
         const a = (p1 - 0.12) / 0.88;
         const col = s.stage === 3 ? [180, 130, 20] : [59, 130, 246];
@@ -285,7 +280,7 @@ export default function TrainingComparison() {
 
       // ── trajectories ──
       if (s.stage >= 2) {
-        const fi = clamp(s.frame / 50, 0, 1);
+        const fi = clamp(s.elapsed / 833, 0, 1);
         const SEG = 24;
         s.trajs.forEach(tr => {
           const { sx, sy, ex, ey, off1, off2 } = tr;
@@ -310,7 +305,7 @@ export default function TrainingComparison() {
       }
 
       // ── blue dots (image embeddings) ──
-      const pulse = s.stage === 2 ? 0.78 + 0.22 * Math.sin(s.frame * 0.065) : 1;
+      const pulse = s.stage === 2 ? 0.78 + 0.22 * Math.sin(s.elapsed * 0.0039) : 1;
       s.pts.forEach(pt => {
         const settled = easeO3(clamp(p1 * 1.5, 0, 1));
         const alpha = (0.40 + settled * 0.60) * pulse;
@@ -331,15 +326,15 @@ export default function TrainingComparison() {
       // ── HUD: loss panel (bottom-left) ──
       // Progress bars use same easing as the actual dot movement
       if (s.stage === 1) {
-        const lp = smoothRamp(clamp(s.frame / S1_FRAMES, 0, 1));
+        const lp = smoothRamp(clamp(s.elapsed / S1_MS, 0, 1));
         const loss = 2.8 * (1 - lp) + 0.06;
         drawLossPanel(cx, 12, CH - 52, 170, 40, "Recon Loss", loss, [59, 130, 246], lp);
       } else if (s.stage === 2) {
-        const lp = smoothRamp(clamp(s.frame / S2_FRAMES, 0, 1));
+        const lp = smoothRamp(clamp(s.elapsed / S2_MS, 0, 1));
         const loss = 2.4 * (1 - lp) + 0.08;
         drawLossPanel(cx, 12, CH - 52, 170, 40, "Flow Loss", loss, [140, 70, 210], lp);
       } else {
-        const lp = smoothRamp(clamp(s.frame / S3_FRAMES, 0, 1));
+        const lp = smoothRamp(clamp(s.elapsed / S3_MS, 0, 1));
         const lossR = 2.8 * (1 - lp) + 0.06;
         const lossF = 2.4 * (1 - lp) + 0.08;
         drawLossPanel(cx, 12, CH - 52, 140, 40, "Recon Loss", lossR, [59, 130, 246], lp);
