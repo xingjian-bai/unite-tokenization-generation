@@ -288,7 +288,7 @@ function App() {
                 <a className="button primary" href="https://arxiv.org/abs/2603.22283" target="_blank" rel="noopener noreferrer">
                   arXiv
                 </a>
-                <a className="button" href="https://github.com/ShivamDuggal4/united-final-check-pre-release" target="_blank" rel="noopener noreferrer">
+                <a className="button" href="https://github.com/ShivamDuggal4/UNITE-tokenization-generation/" target="_blank" rel="noopener noreferrer">
                   GitHub
                 </a>
               </div>
